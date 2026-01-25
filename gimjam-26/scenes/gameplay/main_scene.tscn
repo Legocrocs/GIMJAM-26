@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://bykgabs8d7uwp"]
+
+[ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
+[ext_resource type="Texture2D" uid="uid://c2y6is3fv5si1" path="res://assets/ui/bg_temp.png" id="1_rmjae"]
+[ext_resource type="PackedScene" uid="uid://3tq01fh10vsj" path="res://scenes/gameplay/player_inventory.tscn" id="3_xjwa2"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
+
+[node name="MainScene" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("1_rmjae")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="Border" type="StaticBody2D" parent="."]
+position = Vector2(1, 0)
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(-96, 144)
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2(-273, 15)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2(-103, -143)
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2(79, 8)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Player" parent="." instance=ExtResource("1_gh4kw")]
+position = Vector2(6, -24)
+
+[node name="PlayerInventory" parent="." instance=ExtResource("3_xjwa2")]
+offset_left = 127.0
+offset_top = -98.99999
+offset_right = 232.0
+offset_bottom = -68.99999
+scale = Vector2(1.25, 1.25)
