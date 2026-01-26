@@ -3,7 +3,6 @@ extends CharacterBody2D
 @export var speed = 150
 @onready var anim_sprite = $AnimatedSprite2D
 
-
 func get_input():
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	velocity = input_direction * speed
@@ -22,7 +21,7 @@ func change_state(dir):
 	elif (dir.x != 0):
 		anim_sprite.play("walk_h")
 		anim_sprite.flip_h = (dir.x < 0)
-		
+	
 func _physics_process(delta):
 	get_input()
 	move_and_slide()
