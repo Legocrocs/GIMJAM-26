@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bimhke2n3s6ha"]
+
+[ext_resource type="Texture2D" uid="uid://v42rh3ucjhdb" path="res://assets/ui/weapon_slot.png" id="1_485w5"]
+
+[node name="EquipSlots" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1104.0
+offset_bottom = -624.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 24.0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
+
+[node name="TextureButton" type="TextureButton" parent="GridContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture_normal = ExtResource("1_485w5")
+
+[node name="TextureButton2" type="TextureButton" parent="GridContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture_normal = ExtResource("1_485w5")

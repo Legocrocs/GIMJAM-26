@@ -1,0 +1,58 @@
+[gd_scene load_steps=6 format=3 uid="uid://bykgabs8d7uwp"]
+
+[ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
+[ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
+[ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
+[ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
+
+[node name="MainScene" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -5
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("1_jhgck")
+
+[node name="Border" type="StaticBody2D" parent="."]
+position = Vector2(1, 0)
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(-96, 144)
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2(-273, 15)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2(-103, -143)
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2(79, 8)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Player" parent="." instance=ExtResource("1_gh4kw")]
+position = Vector2(6, -24)
+
+[node name="Projectiles" type="Node" parent="." groups=["projectile_group"]]
+
+[node name="Foreground" type="Sprite2D" parent="."]
+z_index = 3
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("3_ys1jj")
+
+[node name="EquipSlots" parent="." instance=ExtResource("4_jhgck")]
+z_index = 3
+offset_left = 144.0
+offset_top = 86.0
+offset_right = 144.0
+offset_bottom = 86.0
+scale = Vector2(2, 2)
