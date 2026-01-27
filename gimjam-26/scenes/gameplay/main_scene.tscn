@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=8 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
+[ext_resource type="PackedScene" uid="uid://cjpwvb4oput4u" path="res://scenes/gameplay/enemy.tscn" id="5_ys1jj"]
+[ext_resource type="Script" uid="uid://dcmkjjh6g32ry" path="res://scenes/gameplay/enemy_spawner.gd" id="6_nhqpi"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -39,7 +41,7 @@ position = Vector2(79, 8)
 rotation = -1.5707964
 shape = SubResource("WorldBoundaryShape2D_rmjae")
 
-[node name="Player" parent="." instance=ExtResource("1_gh4kw")]
+[node name="Player" parent="." groups=["player"] instance=ExtResource("1_gh4kw")]
 position = Vector2(6, -24)
 
 [node name="Projectiles" type="Node" parent="." groups=["projectile_group"]]
@@ -56,3 +58,26 @@ offset_top = 86.0
 offset_right = 144.0
 offset_bottom = 86.0
 scale = Vector2(2, 2)
+
+[node name="Enemy" parent="." instance=ExtResource("5_ys1jj")]
+position = Vector2(-45, -72)
+
+[node name="EnemySpawner" type="Node2D" parent="."]
+script = ExtResource("6_nhqpi")
+enemy_scene = ExtResource("5_ys1jj")
+spawn_area_min = Vector2(-270, -142)
+
+[node name="SpawnAreaRect" type="ColorRect" parent="EnemySpawner"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -270.0
+offset_top = -142.0
+offset_right = -230.0
+offset_bottom = -102.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(8.68, 7.2)
+color = Color(1, 1, 1, 0)
