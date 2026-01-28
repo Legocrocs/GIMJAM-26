@@ -37,9 +37,7 @@ func die():
 	queue_free() 
 
 
-# Only proceed if the body we hit is the Player
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player": 
-		print("Signal Player Collision")
 		if body.has_method("take_damage"):
 			body.take_damage(1)

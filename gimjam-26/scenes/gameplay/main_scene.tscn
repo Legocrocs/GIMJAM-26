@@ -41,7 +41,7 @@ position = Vector2(79, 8)
 rotation = -1.5707964
 shape = SubResource("WorldBoundaryShape2D_rmjae")
 
-[node name="Player" parent="." groups=["player"] instance=ExtResource("1_gh4kw")]
+[node name="Player" parent="." instance=ExtResource("1_gh4kw")]
 position = Vector2(6, -24)
 
 [node name="Projectiles" type="Node" parent="." groups=["projectile_group"]]
