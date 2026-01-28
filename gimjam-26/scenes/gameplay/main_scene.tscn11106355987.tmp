@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=9 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://c1a8sdxkde6in" path="res://scenes/maps.gd" id="4_urqen"]
 [ext_resource type="PackedScene" uid="uid://y0epvir6w06o" path="res://scenes/Map2.tscn" id="5_nhqpi"]
 [ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="5_ys1jj"]
-[ext_resource type="PackedScene" uid="uid://bcsijmsk01gxr" path="res://scenes/Map3.tscn" id="7_78thy"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -63,9 +62,6 @@ script = ExtResource("4_urqen")
 position = Vector2(-36.444447, 1.3333334)
 
 [node name="Map2" parent="Background" instance=ExtResource("5_nhqpi")]
-position = Vector2(-36.444, 1.333)
-
-[node name="Map3" parent="Background" instance=ExtResource("7_78thy")]
 position = Vector2(-36.444, 1.333)
 
 [node name="Player" parent="." instance=ExtResource("1_gh4kw")]
