@@ -2,6 +2,7 @@
 extends Control
 
 signal upgrades_confirmed
+signal skip_upgrades
 
 const GRID_SIZE = Vector2i(10, 8)
 const CELL_SIZE = 64
@@ -27,7 +28,32 @@ func _ready():
 	clear_button.pressed.connect(_on_clear_pressed)
 	
 	GridManager.grid_updated.connect(refresh_grid_visual)
+	
+	GridManager.grid_updated.connect(refresh_grid_visual)
+	# ADD: Skip button
+	var skip_button = Button.new()
+	skip_button.text = "Skip / Next Wave"
+	skip_button.custom_minimum_size = Vector2(150, 50)
+	skip_button.pressed.connect(_on_skip_pressed)
+	
+	# Add to UI (adjust parent based on your layout)
+	confirm_button.get_parent().add_child(skip_button)
+	
+	GridManager.grid_updated.connect(refresh_grid_visual)
 
+func _on_confirm_pressed():
+	# Only confirm if something was placed
+	if GridManager.placed_upgrades.size() > 0:
+		upgrades_confirmed.emit()
+		hide()
+	else:
+		print("No upgrades placed! Use 'Skip' to continue without upgrades.")
+
+func _on_skip_pressed():
+	# Continue without placing upgrades
+	skip_upgrades.emit()
+	hide()
+	
 func get_tile_texture(coords: Vector2i) -> AtlasTexture:
 	var cache_key = str(coords)
 	if tile_texture_cache.has(cache_key):
@@ -96,6 +122,7 @@ func setup_upgrade_list():
 		[Vector2i(3, 4), Vector2i(4, 4), Vector2i(3, 5), Vector2i(4, 5)]
 	))
 
+	
 func create_upgrade(name: String, shape: Array[Vector2i], pattern: Array[Vector2i]) -> UpgradeItem:
 	var upgrade = UpgradeItem.new()
 	upgrade.upgrade_name = name
@@ -128,26 +155,36 @@ func _process(_delta):
 
 func update_grid_preview():
 	var mouse_pos = get_global_mouse_position()
-	var grid_rect = grid_container.get_global_rect()
 	
-	if not grid_rect.has_point(mouse_pos):
+	# Find which cell mouse is over
+	var hovered_cell_index = -1
+	
+	for i in range(grid_cells.size()):
+		var cell = grid_cells[i] as TextureRect
+		var cell_rect = cell.get_global_rect()
+		
+		if cell_rect.has_point(mouse_pos):
+			hovered_cell_index = i
+			break
+	
+	if hovered_cell_index == -1:
+		# Mouse not over any cell
 		if last_hover_pos != Vector2i(-1, -1):
 			refresh_grid_visual()
 			last_hover_pos = Vector2i(-1, -1)
 		return
 	
-	var local_pos = mouse_pos - grid_rect.position
-	var grid_x = int(local_pos.x / CELL_SIZE)
-	var grid_y = int(local_pos.y / CELL_SIZE)
+	# Convert cell index to grid position
+	var grid_x = hovered_cell_index % GRID_SIZE.x
+	var grid_y = int(hovered_cell_index / GRID_SIZE.x)
 	var grid_pos = Vector2i(grid_x, grid_y)
 	
-	grid_pos.x = clamp(grid_pos.x, 0, GRID_SIZE.x - 1)
-	grid_pos.y = clamp(grid_pos.y, 0, GRID_SIZE.y - 1)
+	print("Hovered cell: ", hovered_cell_index, " -> grid pos: ", grid_pos)
 	
 	if grid_pos != last_hover_pos:
 		last_hover_pos = grid_pos
 		show_placement_preview(grid_pos)
-
+		
 func show_placement_preview(grid_pos: Vector2i):
 	refresh_grid_visual()
 	
@@ -233,9 +270,6 @@ func refresh_grid_visual():
 			var index = cell_pos.y * GRID_SIZE.x + cell_pos.x
 			update_cell_visual(grid_cells[index], true, tile_texture)
 
-func _on_confirm_pressed():
-	upgrades_confirmed.emit()
-	hide()
 
 func _on_clear_pressed():
 	GridManager.clear_all()
@@ -252,3 +286,34 @@ func _gui_input(event):
 			
 			if grid_x >= 0 and grid_x < GRID_SIZE.x and grid_y >= 0 and grid_y < GRID_SIZE.y:
 				GridManager.remove_upgrade(Vector2i(grid_x, grid_y))
+
+func setup_buttons():
+	# Create Confirm Button
+	if not confirm_button:
+		confirm_button = Button.new()
+		confirm_button.text = "Start Stage"
+		confirm_button.custom_minimum_size = Vector2(200, 60)
+		add_child(confirm_button)
+	
+	confirm_button.pressed.connect(_on_confirm_pressed)
+	
+	# Position at bottom center
+	confirm_button.position = Vector2(
+		get_viewport_rect().size.x / 2 - 100,
+		get_viewport_rect().size.y - 100
+	)
+	
+	# Create Clear Button
+	if not clear_button:
+		clear_button = Button.new()
+		clear_button.text = "Clear All"
+		clear_button.custom_minimum_size = Vector2(150, 50)
+		add_child(clear_button)
+	
+	clear_button.pressed.connect(_on_clear_pressed)
+	
+	# Position next to confirm
+	clear_button.position = Vector2(
+		confirm_button.position.x - 170,
+		confirm_button.position.y
+	)

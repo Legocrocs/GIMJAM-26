@@ -74,7 +74,7 @@ func remove_upgrade(grid_pos: Vector2i) -> bool:
 	return false
 
 func get_blocked_cells() -> Array[Vector2i]:
-	var blocked = []
+	var blocked: Array[Vector2i] = []
 	for y in GRID_SIZE.y:
 		for x in GRID_SIZE.x:
 			if grid_state[y][x]:

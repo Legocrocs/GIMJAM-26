@@ -61,17 +61,28 @@ func get_random_spawn_position() -> Vector2:
 
 func spawn_enemy():
 	if enemy_scene == null:
+		print("Error: Enemy scene not assigned!")
 		return
 	
 	var enemy = enemy_scene.instantiate()
 	enemy.position = get_random_spawn_position()
 	
 	get_parent().add_child(enemy)
-	enemies_spawned += 1
-	enemies_alive += 1
 	
+	# DEBUG
+	print("Enemy spawned, connecting death signal...")
+	
+	# Connect death signal
 	if enemy.has_signal("enemy_died"):
-		enemy.enemy_died.connect(_on_enemy_died)
+		var main_scene = get_tree().get_root().get_node("MainScene")  # Adjust path!
+		
+		if main_scene:
+			enemy.enemy_died.connect(main_scene._on_enemy_died)
+			print("  - Connected to main_scene")
+		else:
+			print("  - ERROR: MainScene not found!")
+	else:
+		print("  - ERROR: enemy_died signal not found!")
 
 func _on_enemy_died():
 	enemies_alive -= 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cxbb3vdqoy6f4"]
+[gd_scene load_steps=5 format=3 uid="uid://cx3k7fatrn2rk"]
 
 [ext_resource type="Script" uid="uid://bppoxmslg31f8" path="res://scenes/gameplay/upgrade_screen.gd" id="1_kxmpe"]
 [ext_resource type="Texture2D" uid="uid://cygrmebgrqgf3" path="res://assets/tiles/tileset.png" id="2_xo01k"]
