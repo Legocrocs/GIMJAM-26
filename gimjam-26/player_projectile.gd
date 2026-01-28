@@ -12,5 +12,10 @@ func _ready() -> void:
 func _physics_process(delta) -> void:
 	position += transform.x * speed * delta
 
+func _on_body_entered(body: Node2D) -> void:
+	if body.has_method("take_damage"):
+		body.take_damage(1)
+		queue_free()
+
 func _on_timer_timeout() -> void:
 	queue_free()
