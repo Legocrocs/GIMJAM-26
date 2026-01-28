@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxbb3vdqoy6f4"]
+
+[ext_resource type="Script" uid="uid://bppoxmslg31f8" path="res://scenes/gameplay/upgrade_screen.gd" id="1_kxmpe"]
+[ext_resource type="Texture2D" uid="uid://cygrmebgrqgf3" path="res://assets/tiles/tileset.png" id="2_xo01k"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ms46l"]
+texture = ExtResource("2_xo01k")
+texture_region_size = Vector2i(8, 8)
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+6:5/0 = 0
+6:6/0 = 0
+5:6/0 = 0
+4:6/0 = 0
+3:6/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_an5wt"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_ms46l")
+
+[node name="UpgradeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_kxmpe")
+tileset = SubResource("TileSet_an5wt")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="UpgradeList" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ConfirmButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="ClearButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0

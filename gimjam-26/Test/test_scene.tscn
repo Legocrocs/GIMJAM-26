@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://4gqywopkleku"]
+
+[ext_resource type="Script" uid="uid://ftatyxakhqtx" path="res://Test/test_upgrade.gd" id="1_jsoud"]
+[ext_resource type="PackedScene" uid="uid://cxbb3vdqoy6f4" path="res://scenes/gameplay/upgrade_screen.tscn" id="2_d38du"]
+
+[node name="TestScene" type="Node2D"]
+script = ExtResource("1_jsoud")
+
+[node name="UpgradeScreen" parent="." instance=ExtResource("2_d38du")]

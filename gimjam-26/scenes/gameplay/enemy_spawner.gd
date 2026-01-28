@@ -1,25 +1,40 @@
 extends Node2D
 
+signal wave_completed  # Signal untuk kasih tau wave selesai
+
 @export var enemy_scene: PackedScene
 @export var spawn_interval: float = 2.0
-@export var max_enemies: int = 5
-# Spawn area - adjust koordinat sesuai arena
+@export var enemies_per_wave: int = 5
+
+# Spawn area
 @export var spawn_area_min: Vector2 = Vector2(80, 50)
 @export var spawn_area_max: Vector2 = Vector2(760, 560)
 
+# Spawn sides
 enum SpawnSide {LEFT, RIGHT, TOP, BOTTOM, RANDOM}
 @export var spawn_from_sides: Array[SpawnSide] = [SpawnSide.LEFT, SpawnSide.RIGHT, SpawnSide.TOP, SpawnSide.BOTTOM]
 
 var spawn_timer: float = 0.0
-var current_enemies: int = 0
+var enemies_spawned: int = 0
+var enemies_alive: int = 0
+var wave_active: bool = false
 
 func _ready():
 	spawn_timer = spawn_interval
 
+func start_wave():
+	wave_active = true
+	enemies_spawned = 0
+	enemies_alive = 0
+	print("Wave started! Kill %d enemies" % enemies_per_wave)
+
 func _process(delta):
+	if not wave_active:
+		return
+	
 	spawn_timer -= delta
 	
-	if spawn_timer <= 0 and current_enemies < max_enemies:
+	if spawn_timer <= 0 and enemies_spawned < enemies_per_wave:
 		spawn_enemy()
 		spawn_timer = spawn_interval
 
@@ -52,10 +67,20 @@ func spawn_enemy():
 	enemy.position = get_random_spawn_position()
 	
 	get_parent().add_child(enemy)
-	current_enemies += 1
+	enemies_spawned += 1
+	enemies_alive += 1
 	
 	if enemy.has_signal("enemy_died"):
 		enemy.enemy_died.connect(_on_enemy_died)
 
 func _on_enemy_died():
-	current_enemies -= 1
+	enemies_alive -= 1
+	
+	# mati checck
+	if enemies_alive <= 0 and enemies_spawned >= enemies_per_wave:
+		wave_completed.emit()
+		wave_active = false
+		print("Wave completed! Door unlocked!")
+
+func get_enemy_count() -> String:
+	return "%d/%d" % [enemies_alive, enemies_per_wave]
