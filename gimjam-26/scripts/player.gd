@@ -26,7 +26,7 @@ func change_state(dir):
 
 func take_damage(amount: int):
 	health -= amount
-	print("Player Health is now: ", health)
+	print("Player Health: ", health)
 	if health <= 0:
 		print ("No health lmao")
 		#die()
