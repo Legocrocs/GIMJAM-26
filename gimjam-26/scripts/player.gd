@@ -1,7 +1,9 @@
 extends CharacterBody2D
 
+@export var health: int = 5
 @export var speed = 150
 @onready var anim_sprite = $AnimatedSprite2D
+var is_invincible: bool = false
 
 func get_input():
 	var input_direction = Input.get_vector("left", "right", "up", "down")
@@ -21,7 +23,22 @@ func change_state(dir):
 	elif (dir.x != 0):
 		anim_sprite.play("walk_h")
 		anim_sprite.flip_h = (dir.x < 0)
-	
+
+func take_damage(amount: int):
+	health -= amount
+	print("Player Health is now: ", health)
+	if health <= 0:
+		print ("No health lmao")
+		#die()
+
+func start_invincibility():
+	is_invincible = true
+	# Visual feedback: Flash red
+	modulate = Color.RED
+	await get_tree().create_timer(0.2).timeout
+	modulate = Color.WHITE
+	is_invincible = false
+
 func _physics_process(delta):
 	get_input()
 	move_and_slide()

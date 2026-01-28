@@ -1,9 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://dwet4kaqowj6n"]
+[gd_scene load_steps=25 format=3 uid="uid://dwet4kaqowj6n"]
 
 [ext_resource type="Script" uid="uid://drby172likx7n" path="res://scripts/player.gd" id="1_hrnqq"]
 [ext_resource type="Texture2D" uid="uid://cl6cj3iblfiid" path="res://assets/character/prototype_character.png" id="1_wgl7f"]
 [ext_resource type="Texture2D" uid="uid://d0c0fdbn6fku" path="res://assets/ui/custom_cursor.png" id="3_0j0ot"]
-[ext_resource type="Script" uid="uid://bc0lxwevitmue" path="res://scenes/gameplay/aim_indicator.gd" id="3_dap4h"]
+[ext_resource type="Script" path="res://scenes/gameplay/aim_indicator.gd" id="3_dap4h"]
 [ext_resource type="PackedScene" uid="uid://chd285h0grxy5" path="res://scenes/gameplay/player_projectile.tscn" id="4_ki2oj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrnqq"]
@@ -149,7 +149,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ki2oj"]
 size = Vector2(20, 19)
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_ki2oj"]
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_hrnqq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -178,3 +180,10 @@ texture = ExtResource("3_0j0ot")
 visible = false
 points = PackedVector2Array(15, 0, 0, 0)
 width = 1.0
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 5)
+shape = SubResource("CircleShape2D_ki2oj")
