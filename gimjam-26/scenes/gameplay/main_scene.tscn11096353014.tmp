@@ -1,18 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bykgabs8d7uwp"]
-[gd_scene load_steps=12 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=9 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
-[ext_resource type="Script" uid="uid://ceqvkabmvdsoo" path="res://scenes/gameplay/enemies/enemy_spawner.gd" id="5_nhqpi"]
-[ext_resource type="PackedScene" uid="uid://e0s1gsd07xx7" path="res://scenes/gameplay/enemies/enemy_1.tscn" id="5_ys1jj"]
 [ext_resource type="Script" uid="uid://c1a8sdxkde6in" path="res://scenes/maps.gd" id="4_urqen"]
 [ext_resource type="PackedScene" uid="uid://y0epvir6w06o" path="res://scenes/Map2.tscn" id="5_nhqpi"]
 [ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="5_ys1jj"]
-[ext_resource type="PackedScene" uid="uid://bcsijmsk01gxr" path="res://scenes/Map3.tscn" id="7_78thy"]
-[ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_86tpb"]
-[ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="8_p05um"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -58,9 +52,6 @@ offset_right = 144.0
 offset_bottom = 86.0
 scale = Vector2(2, 2)
 
-[node name="EnemySpawner" type="Node2D" parent="."]
-script = ExtResource("5_nhqpi")
-enemy_scene = ExtResource("5_ys1jj")
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -5
 scale = Vector2(2.25, 2.25)
@@ -72,16 +63,6 @@ position = Vector2(-36.444447, 1.3333334)
 
 [node name="Map2" parent="Background" instance=ExtResource("5_nhqpi")]
 position = Vector2(-36.444, 1.333)
-
-[node name="Map3" parent="Background" instance=ExtResource("7_78thy")]
-position = Vector2(-36.444, 1.333)
-
-[node name="Map4" parent="Background" instance=ExtResource("8_p05um")]
-scale = Vector2(0.44444445, 0.44444445)
-
-[node name="Trans" parent="Background" instance=ExtResource("8_86tpb")]
-position = Vector2(-38.222218, 1.3333321)
-scale = Vector2(0.84382814, 0.8121236)
 
 [node name="Player" parent="." instance=ExtResource("1_gh4kw")]
 position = Vector2(6, -24)
