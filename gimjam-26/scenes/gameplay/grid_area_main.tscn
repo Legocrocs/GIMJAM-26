@@ -1,0 +1,387 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhhg2orefy0c5"]
+
+[ext_resource type="Texture2D" uid="uid://cnflsju8weydk" path="res://assets/ui/grid-slot.png" id="1_j38ol"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8cwa"]
+atlas = ExtResource("1_j38ol")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28avo"]
+atlas = ExtResource("1_j38ol")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpcxs"]
+atlas = ExtResource("1_j38ol")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7u5pe"]
+atlas = ExtResource("1_j38ol")
+region = Rect2(24, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w5qj2"]
+atlas = ExtResource("1_j38ol")
+region = Rect2(32, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hhay0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d8cwa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28avo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fpcxs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7u5pe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w5qj2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="GridAreaMain" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="."]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 6
+
+[node name="Grid1" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid1"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.03594036
+
+[node name="Grid2" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid2"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.11435117
+
+[node name="Grid3" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid3"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid4" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid4"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid5" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid5"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid6" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid6"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid7" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid7"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid8" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid8"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid9" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid9"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid10" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid10"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid11" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid11"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid12" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid12"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid13" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid13"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid14" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid14"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid15" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid15"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid16" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid16"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid17" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid17"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid18" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid18"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid19" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid19"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid20" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid20"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid21" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid21"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid22" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid22"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid23" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid23"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid24" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid24"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid25" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid25"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid26" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid26"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid27" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid27"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid28" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid28"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid29" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid29"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid30" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid30"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid31" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid31"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid32" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid32"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid33" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid33"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid34" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid34"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid35" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid35"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
+
+[node name="Grid36" type="Button" parent="GridContainer"]
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="GridContainer/Grid36"]
+position = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_hhay0")
+frame_progress = 0.009827409
