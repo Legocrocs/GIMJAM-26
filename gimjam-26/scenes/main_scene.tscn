@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://8154no3rf282"]
+[gd_scene load_steps=16 format=3 uid="uid://8154no3rf282"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="6_01n6w"]
 [ext_resource type="PackedScene" uid="uid://bc6c2xvvdw2t7" path="res://scenes/Map5.tscn" id="7_6u1mn"]
 [ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_r6p65"]
+[ext_resource type="FontFile" uid="uid://bxcq0j5lwucvd" path="res://Font/PixelifySans-Medium.ttf" id="9_r6p65"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -27,6 +28,7 @@ position = Vector2(1, 0)
 scale = Vector2(2.25, 2.25)
 texture = ExtResource("1_jhgck")
 script = ExtResource("2_mngbo")
+esc_prompt_label_path = NodePath("../Label")
 
 [node name="Map1" parent="Background" instance=ExtResource("3_4w45t")]
 position = Vector2(-36.444, 1.333)
@@ -35,12 +37,15 @@ position = Vector2(-36.444, 1.333)
 position = Vector2(-36.444, 1.333)
 
 [node name="Map3" parent="Background" instance=ExtResource("5_si52b")]
+visible = false
 position = Vector2(-36.444, 1.333)
 
 [node name="Map4" parent="Background" instance=ExtResource("6_01n6w")]
+visible = false
 position = Vector2(-36.444, 1.333)
 
 [node name="Map5" parent="Background" instance=ExtResource("7_6u1mn")]
+visible = false
 position = Vector2(-36.444, 1.333)
 
 [node name="Trans" parent="Background" instance=ExtResource("8_r6p65")]
@@ -91,3 +96,12 @@ scale = Vector2(2, 2)
 [node name="EnemySpawner" type="Node2D" parent="."]
 script = ExtResource("5_nhqpi")
 enemy_scene = ExtResource("5_ys1jj")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -202.0
+offset_top = 108.0
+offset_right = 16.0
+offset_bottom = 131.0
+scale = Vector2(1.1722332, 1.2998145)
+theme_override_fonts/font = ExtResource("9_r6p65")
+text = "press esc to exit edit mode"
