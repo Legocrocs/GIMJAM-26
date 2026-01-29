@@ -1,9 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://dwet4kaqowj6n"]
+[gd_scene load_steps=25 format=3 uid="uid://dwet4kaqowj6n"]
 
 [ext_resource type="Script" uid="uid://drby172likx7n" path="res://scripts/player.gd" id="1_hrnqq"]
 [ext_resource type="Texture2D" uid="uid://cl6cj3iblfiid" path="res://assets/character/prototype_character.png" id="1_wgl7f"]
 [ext_resource type="Script" uid="uid://bc0lxwevitmue" path="res://scripts/aim_indicator.gd" id="3_dap4h"]
+[ext_resource type="Resource" uid="uid://ddo4mlpeche01" path="res://assets/character/weapon/Watering_Can_Weapon.tres" id="5_03k2y"]
 [ext_resource type="Texture2D" uid="uid://d0c0fdbn6fku" path="res://assets/ui/custom_cursor.png" id="6_03k2y"]
+[ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="6_olumy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrnqq"]
 atlas = ExtResource("1_wgl7f")
@@ -165,6 +167,8 @@ shape = SubResource("RectangleShape2D_ki2oj")
 [node name="AimController" type="Node2D" parent="."]
 script = ExtResource("3_dap4h")
 default_pointer = ExtResource("6_03k2y")
+left_weapon = ExtResource("5_03k2y")
+right_weapon = ExtResource("6_olumy")
 
 [node name="Timer" type="Timer" parent="AimController"]
 wait_time = 0.3
