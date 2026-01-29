@@ -1,6 +1,10 @@
 # res://scenes/maps.gd
 # Attach to: MainScene/Background
-# Refactor: supports Map1..Map5 (or any count) using arrays instead of hardcoding Map1/Map2
+# Supports Map1..MapN using arrays
+# Transition behavior:
+# - On EXIT: show Trans node for 1.5s, then load next map
+# - Player hidden + input locked during transition
+# - After map loads: player still hidden + input locked until ESC (ui_cancel)
 
 extends Node2D
 
@@ -18,6 +22,13 @@ extends Node2D
 # Exit trigger tuning
 @export var exit_trigger_delay_frames: int = 3
 
+# --- NEW: Transition screen node (your Node2D named "Trans") ---
+@export var transition_node_path: NodePath = NodePath("Trans")
+@export var transition_duration: float = 1.5
+
+# Keep previous ESC transition behavior
+@export var transition_requires_esc: bool = true
+
 
 var current_map: Node2D = null
 var _current_map_index: int = 0
@@ -29,17 +40,34 @@ var _map_xforms: Dictionary = {} # key: "Map1"/"Map2"/...  value: Transform2D
 var _exit_trigger: Area2D = null
 var _is_switching_map := false
 
+# Transition state (ESC gate)
+var _transition_waiting_for_esc := false
+
+# Transition screen reference
+var _trans: Node2D = null
+
 
 func _ready() -> void:
 	print("BG DEBUG: Background script running on node =", name, " path=", get_path())
+
+	# Grab transition screen node
+	_trans = get_node_or_null(transition_node_path) as Node2D
+	if _trans != null:
+		_trans.visible = false
+		# ensure it's above maps when shown
+		_trans.z_index = 9999
+
 	_autoload_scenes_and_xforms_from_children()
 
 	if map_scenes.is_empty():
-		push_error("Background: map_scenes is empty. Drag Map1..Map5 scenes into Background -> map_scenes.")
+		push_error("Background: map_scenes is empty. Drag Map1..MapN scenes into Background -> map_scenes.")
 		return
 
 	start_map_index = clamp(start_map_index, 0, map_scenes.size() - 1)
 	await load_map(start_map_index)
+
+	# Ensure we start in normal state
+	_finish_transition_if_needed(true)
 
 
 # ---------------------------------------------------------
@@ -50,20 +78,29 @@ func _autoload_scenes_and_xforms_from_children() -> void:
 	for c in get_children():
 		if c is Node2D and (c.name.begins_with("Map")):
 			var n := c as Node2D
-
-			# Save transform by name so we can re-apply after instancing
 			_map_xforms[n.name] = n.transform
 
-			# If user didn't assign map_scenes manually, we can try to auto-load from scene_file_path
-			# NOTE: safest path is still to assign map_scenes in Inspector.
 			if n.scene_file_path != "":
 				var ps := load(n.scene_file_path) as PackedScene
-				if ps != null:
-					# Append only if not already present
-					if not map_scenes.has(ps):
-						map_scenes.append(ps)
+				if ps != null and not map_scenes.has(ps):
+					map_scenes.append(ps)
 
 			n.queue_free()
+
+
+# ---------------------------------------------------------
+# ESC-only input gate (keeps previous behavior)
+# ---------------------------------------------------------
+func _unhandled_input(event: InputEvent) -> void:
+	if not _transition_waiting_for_esc:
+		return
+
+	# Only ESC / ui_cancel allowed
+	if event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE):
+		_finish_transition()
+		get_viewport().set_input_as_handled()
+	else:
+		get_viewport().set_input_as_handled()
 
 
 # ---------------------------------------------------------
@@ -100,37 +137,28 @@ func load_map(which: int) -> void:
 		return
 
 	current_map = inst as Node2D
-	current_map.name = "Map%s" % (which + 1) # Map1, Map2, Map3...
+	current_map.name = "Map%s" % (which + 1)
 	add_child(current_map)
 
-	# Preserve editor offset (if we captured it)
+	# Preserve editor offset (if captured)
 	if _map_xforms.has(current_map.name):
 		current_map.transform = _map_xforms[current_map.name]
 
 	print("BG DEBUG: added map node =", current_map.name, " path=", current_map.get_path())
 
-	# Only await ready if not already ready
 	if not current_map.is_node_ready():
-		print("BG DEBUG: waiting for current_map.ready ...")
 		await current_map.ready
-	print("BG DEBUG: current_map is ready")
-
 	await get_tree().process_frame
 
 	# Find TileMapLayer
 	var layer := _find_first_tilemaplayer(current_map)
-	print("BG DEBUG: layer found =", layer)
-
 	if layer != null:
 		await _wait_for_layer_gates(layer)
-		print("BG DEBUG: gates ready entrance=", layer.entrance_gate_cell, " exit=", layer.exit_gate_cell)
 
-	# Spawn player at entrance
-	print("BG DEBUG: about to spawn player")
+	# Spawn player at entrance (DO NOT force visible; transition controls visibility)
 	await _spawn_player_at_entrance(current_map)
-	print("BG DEBUG: spawn finished")
 
-	# Create trigger on EXIT gate
+	# Create exit trigger
 	if layer != null:
 		_create_exit_trigger(layer)
 
@@ -186,8 +214,8 @@ func _spawn_player_at_entrance(map_node: Node2D) -> void:
 
 
 # ---------------------------------------------------------
-# EXIT trigger creation + switching maps (now sequential)
-# Map1 -> Map2 -> Map3 -> ... -> MapN (last map: exit does nothing)
+# EXIT trigger creation + switching maps (sequential)
+# + NEW: show Trans screen for 1.5s BEFORE showing next map
 # ---------------------------------------------------------
 func _remove_exit_trigger() -> void:
 	if is_instance_valid(_exit_trigger):
@@ -239,10 +267,7 @@ func _on_exit_trigger_body_entered(body: Node) -> void:
 	if body != player:
 		return
 
-	# Next map in sequence
 	var next_index := _current_map_index + 1
-
-	# If last map, do nothing (no looping back)
 	if next_index >= map_scenes.size():
 		print("BG DEBUG: Exit reached on last map (index=", _current_map_index, "). No next map; ignoring.")
 		return
@@ -250,9 +275,110 @@ func _on_exit_trigger_body_entered(body: Node) -> void:
 	_is_switching_map = true
 	print("BG DEBUG: Player entered EXIT. Switching to map index=", next_index)
 
-	await load_map(next_index)
+	# Keep previous behavior: hide player + lock inputs until ESC
+	if transition_requires_esc:
+		_begin_transition()
+
+	# NEW: show Trans screen for 1.5s BEFORE next map is shown
+	await _play_between_maps_transition(next_index)
 
 	_is_switching_map = false
+
+
+func _play_between_maps_transition(next_index: int) -> void:
+	# 1) Hide current map (so old map isn't visible behind Trans)
+	if is_instance_valid(current_map):
+		current_map.visible = false
+
+	# 2) Show Trans on top
+	_show_trans(true)
+
+	# 3) Wait fixed time
+	await get_tree().create_timer(transition_duration).timeout
+
+	# 4) Load next map while Trans is still visible (so player never sees pop-in)
+	await load_map(next_index)
+
+	# 5) Keep Trans above the newly added map for 1 frame, then hide it
+	await get_tree().process_frame
+	_show_trans(false)
+
+
+func _show_trans(show: bool) -> void:
+	if _trans == null:
+		return
+
+	_trans.visible = show
+
+	# Ensure it's drawn ABOVE the map that gets instanced (since load_map add_child makes map last)
+	if show:
+		move_child(_trans, get_child_count() - 1)
+		_trans.z_index = 9999
+
+
+# ---------------------------------------------------------
+# Transition lock (player hidden + no input until ESC)
+# This is the "previous transition" you said must stay.
+# ---------------------------------------------------------
+func _begin_transition() -> void:
+	_transition_waiting_for_esc = true
+
+	# Mouse should appear during the transition
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	var player := get_node_or_null(player_path) as Node2D
+	if player != null:
+		player.visible = false
+
+	_set_player_controls_enabled(false)
+
+
+func _finish_transition() -> void:
+	_transition_waiting_for_esc = false
+
+	# Keep mouse visible
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	_set_player_controls_enabled(true)
+
+	var player := get_node_or_null(player_path) as Node2D
+	if player != null:
+		player.visible = true
+		if player is CharacterBody2D:
+			(player as CharacterBody2D).velocity = Vector2.ZERO
+
+
+func _finish_transition_if_needed(force: bool = false) -> void:
+	if force and _transition_waiting_for_esc:
+		_finish_transition()
+	elif force and not _transition_waiting_for_esc:
+		_set_player_controls_enabled(true)
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		var player := get_node_or_null(player_path) as Node2D
+		if player != null:
+			player.visible = true
+
+
+func _set_player_controls_enabled(enabled: bool) -> void:
+	var player := get_node_or_null(player_path) as Node
+	if player == null:
+		return
+
+	_set_node_processing_recursive(player, enabled)
+
+	if player is CharacterBody2D:
+		(player as CharacterBody2D).velocity = Vector2.ZERO
+
+
+func _set_node_processing_recursive(n: Node, enabled: bool) -> void:
+	n.set_process(enabled)
+	n.set_physics_process(enabled)
+	n.set_process_input(enabled)
+	n.set_process_unhandled_input(enabled)
+	n.set_process_unhandled_key_input(enabled)
+
+	for c in n.get_children():
+		_set_node_processing_recursive(c, enabled)
 
 
 # ---------------------------------------------------------
@@ -287,6 +413,7 @@ func _side_for_gate_cell(rect: Rect2i, cell: Vector2i) -> String:
 		best = d_left
 		best_side = "left"
 	if d_right < best:
+		best = d_right
 		best_side = "right"
 	return best_side
 
