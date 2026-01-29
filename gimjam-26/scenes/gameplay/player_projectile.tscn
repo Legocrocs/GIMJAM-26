@@ -1,11 +1,15 @@
-[gd_scene load_steps=16 format=3 uid="uid://chd285h0grxy5"]
+[gd_scene load_steps=22 format=3 uid="uid://chd285h0grxy5"]
 
-[ext_resource type="Script" uid="uid://dihexcpc8qee4" path="res://player_projectile.gd" id="1_1nfi7"]
+[ext_resource type="Script" uid="uid://dihexcpc8qee4" path="res://scripts/player_projectile.gd" id="1_1nfi7"]
 [ext_resource type="Texture2D" uid="uid://dh33ocmkslgq3" path="res://assets/character/projectiles/All_Fire_Bullet_Pixel_16x16_00.png" id="2_iaq34"]
 [ext_resource type="Texture2D" uid="uid://c5ojgtv4eb7lw" path="res://assets/character/carrot_projectile.png" id="3_iaq34"]
+[ext_resource type="Texture2D" uid="uid://dfg71fgycmyq0" path="res://assets/character/projectiles/water_projectile.png" id="3_water"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1nfi7"]
-radius = 2.0396078
+radius = 2.03961
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_water"]
+radius = 5.33333
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0wexk"]
 atlas = ExtResource("2_iaq34")
@@ -46,6 +50,18 @@ region = Rect2(208, 32, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_f8lwp"]
 atlas = ExtResource("2_iaq34")
 region = Rect2(224, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cv7vt"]
+atlas = ExtResource("3_water")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujk33"]
+atlas = ExtResource("3_water")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m102s"]
+atlas = ExtResource("3_water")
+region = Rect2(16, 0, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cv7vt"]
 animations = [{
@@ -93,6 +109,20 @@ animations = [{
 "loop": true,
 "name": &"var3",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cv7vt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujk33")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m102s")
+}],
+"loop": true,
+"name": &"var_water",
+"speed": 10.0
 }]
 
 [node name="player_projectile" type="Area2D"]
