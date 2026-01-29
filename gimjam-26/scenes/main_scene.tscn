@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://8154no3rf282"]
+[gd_scene load_steps=14 format=3 uid="uid://8154no3rf282"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="6_01n6w"]
 [ext_resource type="PackedScene" uid="uid://bc6c2xvvdw2t7" path="res://scenes/Map5.tscn" id="7_6u1mn"]
 [ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_r6p65"]
+[ext_resource type="FontFile" uid="uid://bxcq0j5lwucvd" path="res://Font/PixelifySans-Medium.ttf" id="9_mngbo"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -25,6 +26,7 @@ position = Vector2(1, 0)
 scale = Vector2(2.25, 2.25)
 texture = ExtResource("1_jhgck")
 script = ExtResource("2_mngbo")
+esc_prompt_label_path = NodePath("../Label")
 
 [node name="Map1" parent="Background" instance=ExtResource("3_4w45t")]
 position = Vector2(-36.444, 1.333)
@@ -85,3 +87,12 @@ offset_top = 86.0
 offset_right = 144.0
 offset_bottom = 86.0
 scale = Vector2(2, 2)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -178.0
+offset_top = 112.0
+offset_right = 26.0
+offset_bottom = 130.4375
+theme_override_fonts/font = ExtResource("9_mngbo")
+theme_override_font_sizes/font_size = 15
+text = "press esc to exit edit mode"
