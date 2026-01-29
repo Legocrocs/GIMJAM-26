@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=9 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
@@ -7,104 +7,58 @@
 [ext_resource type="Script" uid="uid://ceqvkabmvdsoo" path="res://scenes/gameplay/enemies/enemy_spawner.gd" id="5_nhqpi"]
 [ext_resource type="PackedScene" uid="uid://e0s1gsd07xx7" path="res://scenes/gameplay/enemies/enemy_1.tscn" id="5_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bdtcvwjqemf2k" path="res://scenes/gameplay/enemies/boss_corn.tscn" id="7_urqen"]
-[ext_resource type="Texture2D" uid="uid://ch6g03v7r7akv" path="res://assets/ui/player_inventoryt_alt.png" id="10_inv_alt"]
-[ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scripts/world_drop_zone.gd" id="11_drop_zone"]
-[ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scripts/add_test_item.gd" id="12_test_item"]
-[ext_resource type="PackedScene" uid="uid://uiexcroth68s" path="res://scenes/gameplay/item.tscn" id="13_item"]
-[ext_resource type="Script" uid="uid://c4yjygcm18e01" path="res://scripts/weapon_data.gd" id="14_wpn_data"]
-[ext_resource type="Resource" uid="uid://ddo4mlpeche01" path="res://assets/character/weapon/Watering_Can_Weapon.tres" id="15_can"]
-[ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="16_can_alt"]
-[ext_resource type="PackedScene" uid="uid://chiour3neyqo1" path="res://scenes/gameplay/player_area.tscn" id="17_player_area"]
-[ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://scenes/ui/player_inventory.tscn" id="18_inv_scene"]
-[ext_resource type="Texture2D" uid="uid://ciqapgu0xw3y2" path="res://assets/ui/player_overlay_alt.png" id="19_overlay_alt"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ng0pe"]
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
 [node name="MainScene" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-scale = Vector2(1e-05, 1e-05)
-anchor_mode = 0
-zoom = Vector2(2.25, 2.25)
+zoom = Vector2(2, 2)
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -5
-position = Vector2(257, 144)
-scale = Vector2(2, 2)
+scale = Vector2(2.25, 2.25)
 texture = ExtResource("1_jhgck")
 
+[node name="Border" type="StaticBody2D" parent="."]
+position = Vector2(1, 0)
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(-96, 144)
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2(-273, 15)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2(-103, -143)
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2(79, 8)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
 [node name="Player" parent="." instance=ExtResource("1_gh4kw")]
-position = Vector2(281, 220)
+position = Vector2(6, -24)
 
 [node name="Projectiles" type="Node" parent="." groups=["projectile_group"]]
 
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 338.0
-offset_right = 378.0
-offset_bottom = 40.0
-
-[node name="PlayerInventory" parent="UI" instance=ExtResource("18_inv_scene")]
-layout_mode = 1
-offset_right = 0.0
-offset_bottom = 0.0
-scale = Vector2(2, 2)
-size_flags_horizontal = 1
-size_flags_vertical = 1
-
-[node name="TextureRect" parent="UI/PlayerInventory" index="0"]
-texture = ExtResource("10_inv_alt")
-
-[node name="Area2D" type="Area2D" parent="UI/PlayerInventory" groups=["Player", "projectile_group"]]
-visible = false
-z_index = 6
-position = Vector2(29.333328, 60.000008)
-disable_mode = 1
-script = ExtResource("12_test_item")
-item_scene = ExtResource("13_item")
-loot_table = Array[ExtResource("14_wpn_data")]([ExtResource("16_can_alt"), ExtResource("15_can")])
-player_pos = ExtResource("1_gh4kw")
-
-[node name="ColorRect" type="ColorRect" parent="UI/PlayerInventory/Area2D"]
+[node name="Foreground" type="Sprite2D" parent="."]
 z_index = 3
-offset_left = -8.0
-offset_top = -8.0
-offset_right = 8.0
-offset_bottom = 8.0
-color = Color(0.3372549, 0.42352942, 0.5254902, 1)
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("3_ys1jj")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UI/PlayerInventory/Area2D"]
-shape = SubResource("RectangleShape2D_ng0pe")
-
-[node name="PlayerArea" type="Control" parent="UI"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Foreground" parent="UI/PlayerArea" instance=ExtResource("17_player_area")]
-z_index = 1
-position = Vector2(-338, 0)
-texture = ExtResource("19_overlay_alt")
-
-[node name="WorldDropZone" type="Control" parent="UI/PlayerArea" node_paths=PackedStringArray("equip_slots")]
-layout_mode = 1
-anchor_left = 0.22761437
-anchor_top = 0.19135803
-anchor_right = 1.1348041
-anchor_bottom = 1.080247
-offset_left = -30.694445
-offset_top = -19.555557
-offset_right = -30.694473
-offset_bottom = -19.555573
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-script = ExtResource("11_drop_zone")
-world_item_scene = ExtResource("13_item")
-equip_slots = NodePath("../../PlayerInventory/TextureRect/EquipSlots")
-metadata/_edit_use_anchors_ = true
+[node name="EquipSlots" parent="." instance=ExtResource("4_jhgck")]
+z_index = 3
+offset_left = 144.0
+offset_top = 86.0
+offset_right = 144.0
+offset_bottom = 86.0
+scale = Vector2(2, 2)
 
 [node name="EnemySpawner" type="Node2D" parent="."]
 script = ExtResource("5_nhqpi")
@@ -115,9 +69,3 @@ position = Vector2(-158, 14)
 health = 30
 speed = 45.0
 damage_interval = 1.0
-
-[connection signal="input_event" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_input_event"]
-[connection signal="mouse_entered" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_mouse_entered"]
-
-[editable path="Player"]
-[editable path="UI/PlayerInventory"]
