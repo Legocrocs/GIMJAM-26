@@ -1,5 +1,6 @@
 # grid_manager.gd
-extends Node
+extends Node2D
+
 
 const GRID_SIZE = Vector2i(14, 12)  # ← Ganti jadi 10x8
 

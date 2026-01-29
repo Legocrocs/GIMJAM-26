@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 GridManager="*res://scenes/gameplay/grid_manager.gd"
 
+[dotnet]
+
+project/assembly_name="GIMJAM 26"
+
 [global_group]
 
 PlayerInventory=""
