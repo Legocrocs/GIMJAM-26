@@ -51,14 +51,10 @@ func flash_damage():
 	await get_tree().create_timer(0.1).timeout
 	sprite.modulate = Color(1, 1, 1)
 
+# enemy.gd - Verify this
 func die():
+	print("Enemy dying, emitting signal...")  # DEBUG
 	enemy_died.emit()
-	
-	# Notify main scene
-	var main_scene = get_tree().get_first_node_in_group("main_scene")
-	if main_scene and main_scene.has_method("on_enemy_died"):
-		main_scene.on_enemy_died()
-	
 	queue_free()
 
 func _on_hitbox_area_entered(area):

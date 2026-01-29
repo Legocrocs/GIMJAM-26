@@ -1,13 +1,12 @@
-[gd_scene load_steps=15 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=14 format=3 uid="uid://b5rn0b5c0o85g"]
 
 [ext_resource type="Script" uid="uid://cy6lcyc1hjryr" path="res://scenes/gameplay/main_scene.gd" id="1_78thy"]
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
-[ext_resource type="PackedScene" uid="uid://l16t6vtvy7ab" path="res://scenes/gameplay/enemy.tscn" id="5_ys1jj"]
-[ext_resource type="PackedScene" uid="uid://dl3tm8n36k5i8" path="res://scenes/gameplay/item.tscn" id="6_86tpb"]
-[ext_resource type="Script" path="res://scenes/gameplay/enemy_spawner.gd" id="6_nhqpi"]
+[ext_resource type="PackedScene" uid="uid://cjpwvb4oput4u" path="res://scenes/gameplay/enemy.tscn" id="5_ys1jj"]
+[ext_resource type="Script" uid="uid://dcmkjjh6g32ry" path="res://scenes/gameplay/enemy_spawner.gd" id="6_nhqpi"]
 [ext_resource type="Script" path="res://scripts/equip_slots.gd" id="6_p05um"]
 [ext_resource type="Texture2D" uid="uid://cygrmebgrqgf3" path="res://assets/tiles/tileset.png" id="9_86tpb"]
 [ext_resource type="Script" path="res://scenes/gameplay/grid_overlay.gd" id="10_p05um"]
@@ -51,7 +50,6 @@ sources/0 = SubResource("TileSetAtlasSource_86tpb")
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_78thy")
-item_drop_scene = ExtResource("6_86tpb")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
@@ -93,7 +91,7 @@ z_index = 3
 scale = Vector2(2.25, 2.25)
 texture = ExtResource("3_ys1jj")
 
-[node name="EquipSlots" parent="." node_paths=PackedStringArray("slot_1", "slot_2") instance=ExtResource("4_jhgck")]
+[node name="EquipSlots" parent="." instance=ExtResource("4_jhgck")]
 z_index = 3
 offset_left = 144.0
 offset_top = 86.0
@@ -101,13 +99,10 @@ offset_right = 144.0
 offset_bottom = 86.0
 scale = Vector2(2, 2)
 script = ExtResource("6_p05um")
-slot_1 = NodePath("GridContainer/SlotContainer/MainSlot")
-slot_2 = NodePath("GridContainer/SlotContainer2/SecSlot")
 
 [node name="EnemySpawner" type="Node2D" parent="."]
 script = ExtResource("6_nhqpi")
 enemy_scene = ExtResource("5_ys1jj")
-spawn_area_min = Vector2(-270, -142)
 
 [node name="SpawnAreaRect" type="ColorRect" parent="EnemySpawner"]
 anchors_preset = 8

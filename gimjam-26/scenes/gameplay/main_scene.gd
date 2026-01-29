@@ -61,22 +61,29 @@ func spawn_wave_enemies():
 	if enemies_alive == 0 and current_state == GameState.WAVE_ACTIVE:
 		wave_complete()
 
+# main_scene.gd - ADD MORE DEBUG
 func spawn_single_enemy():
 	var enemy = enemy_spawner.spawn_enemy()
 	if enemy:
 		enemies_alive += 1
+		print("  Enemy spawned! Total alive: ", enemies_alive)  # DEBUG
+		
 		if enemy.has_signal("enemy_died"):
 			enemy.enemy_died.connect(_on_enemy_died)
+			print("    - Death signal connected")  # DEBUG
+		else:
+			print("    - WARNING: No enemy_died signal!")  # DEBUG
+	else:
+		print("  - Failed to spawn enemy!")  # DEBUG
 
 func _on_enemy_died():
 	enemies_alive -= 1
 	print("Enemy died! Remaining: ", enemies_alive)
+	print("  State: ", GameState.keys()[current_state])  # DEBUG
+	print("  Is spawning: ", is_spawning)  # DEBUG
 	
-	# Only finish wave if: 
-	# 1. No enemies left
-	# 2. We are NOT currently spawning more
-	# 3. The wave is actually active
 	if enemies_alive <= 0 and not is_spawning and current_state == GameState.WAVE_ACTIVE:
+		print("  -> Triggering wave_complete()")  # DEBUG
 		wave_complete()
 
 func wave_complete():
