@@ -1,12 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=15 format=3 uid="uid://8154no3rf282"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
+[ext_resource type="Script" uid="uid://c1a8sdxkde6in" path="res://scenes/maps.gd" id="2_mngbo"]
+[ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="3_4w45t"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
+[ext_resource type="PackedScene" uid="uid://y0epvir6w06o" path="res://scenes/Map2.tscn" id="4_r6p65"]
 [ext_resource type="Script" uid="uid://ceqvkabmvdsoo" path="res://scenes/gameplay/enemies/enemy_spawner.gd" id="5_nhqpi"]
+[ext_resource type="PackedScene" uid="uid://bcsijmsk01gxr" path="res://scenes/Map3.tscn" id="5_si52b"]
 [ext_resource type="PackedScene" uid="uid://e0s1gsd07xx7" path="res://scenes/gameplay/enemies/enemy_1.tscn" id="5_ys1jj"]
-[ext_resource type="PackedScene" uid="uid://bdtcvwjqemf2k" path="res://scenes/gameplay/enemies/boss_corn.tscn" id="7_urqen"]
+[ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="6_01n6w"]
+[ext_resource type="PackedScene" uid="uid://bc6c2xvvdw2t7" path="res://scenes/Map5.tscn" id="7_6u1mn"]
+[ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_r6p65"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -17,8 +23,30 @@ zoom = Vector2(2, 2)
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -5
+position = Vector2(1, 0)
 scale = Vector2(2.25, 2.25)
 texture = ExtResource("1_jhgck")
+script = ExtResource("2_mngbo")
+
+[node name="Map1" parent="Background" instance=ExtResource("3_4w45t")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map2" parent="Background" instance=ExtResource("4_r6p65")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map3" parent="Background" instance=ExtResource("5_si52b")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map4" parent="Background" instance=ExtResource("6_01n6w")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map5" parent="Background" instance=ExtResource("7_6u1mn")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Trans" parent="Background" instance=ExtResource("8_r6p65")]
+visible = false
+position = Vector2(-36.444443, 1.3333334)
+scale = Vector2(0.9, 0.88286823)
 
 [node name="Border" type="StaticBody2D" parent="."]
 position = Vector2(1, 0)
@@ -63,9 +91,3 @@ scale = Vector2(2, 2)
 [node name="EnemySpawner" type="Node2D" parent="."]
 script = ExtResource("5_nhqpi")
 enemy_scene = ExtResource("5_ys1jj")
-
-[node name="BossCorn" parent="." instance=ExtResource("7_urqen")]
-position = Vector2(-99, -6)
-health = 30
-speed = 45.0
-damage_interval = 1.0
