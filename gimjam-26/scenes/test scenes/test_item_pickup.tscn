@@ -1,0 +1,132 @@
+[gd_scene load_steps=3 format=3 uid="uid://07o6t41tr3ai"]
+
+[sub_resource type="GDScript" id="GDScript_m5li2"]
+script/source = "# test_player.gd
+extends CharacterBody2D
+
+const SPEED = 300.0
+
+func _physics_process(delta):
+	# Simple WASD movement
+	var direction = Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
+	velocity = direction * SPEED
+	move_and_slide()
+"
+
+[sub_resource type="GDScript" id="GDScript_6vyjn"]
+script/source = "# test_spawner.gd
+extends Node2D
+
+const ITEM_SCENE = preload(\"res://scenes/gameplay/item.tscn\")
+
+var picked_items: Array[UpgradeItem] = []
+
+func _ready():
+	print(\"=== ITEM PICKUP TEST ===\")
+	print(\"Press 1, 2, 3 to spawn test items\")
+	print(\"Walk to item and press SPACE to pickup\")
+	print(\"========================\")
+	
+	# Spawn initial test items
+	spawn_test_item(\"3x1\", Vector2(200, 200))
+	spawn_test_item(\"2x2\", Vector2(400, 200))
+	spawn_test_item(\"1x3\", Vector2(300, 300))
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_1:
+			spawn_test_item(\"3x1\", get_random_position())
+		elif event.keycode == KEY_2:
+			spawn_test_item(\"2x2\", get_random_position())
+		elif event.keycode == KEY_3:
+			spawn_test_item(\"1x3\", get_random_position())
+
+func spawn_test_item(type: String, position: Vector2):
+	var upgrade = create_upgrade(type)
+	
+	# Create item instance
+	var item = ITEM_SCENE.instantiate()
+	item.upgrade_data = upgrade
+	item.global_position = position
+	
+	# Connect pickup signal
+	item.item_picked_up.connect(_on_item_picked_up)
+	
+	add_child(item)
+	print(\"Spawned \", type, \" at \", position)
+
+func create_upgrade(type: String) -> UpgradeItem:
+	var upgrade = UpgradeItem.new()
+	
+	match type:
+		\"3x1\":
+			upgrade.upgrade_name = \"3x1 Bar\"
+			upgrade.grid_shape = [Vector2i(0,0), Vector2i(1,0), Vector2i(2,0)]
+			upgrade.tile_pattern = [Vector2i(3,6), Vector2i(4,6), Vector2i(5,6)]
+		\"2x2\":
+			upgrade.upgrade_name = \"2x2 Square\"
+			upgrade.grid_shape = [Vector2i(0,0), Vector2i(1,0), Vector2i(0,1), Vector2i(1,1)]
+			upgrade.tile_pattern = [Vector2i(3,4), Vector2i(4,4), Vector2i(3,5), Vector2i(4,5)]
+		\"1x3\":
+			upgrade.upgrade_name = \"1x3 Bar\"
+			upgrade.grid_shape = [Vector2i(0,0), Vector2i(0,1), Vector2i(0,2)]
+			upgrade.tile_pattern = [Vector2i(6,4), Vector2i(6,5), Vector2i(6,6)]
+	
+	return upgrade
+
+func get_random_position() -> Vector2:
+	return Vector2(
+		randf_range(150, 450),
+		randf_range(150, 450)
+	)
+
+func _on_item_picked_up(upgrade: UpgradeItem):
+	picked_items.append(upgrade)
+	print(\"✓ Picked up: \", upgrade.upgrade_name)
+	print(\"  Total items in inventory: \", picked_items.size())
+	
+	# Update UI
+	update_inventory_display()
+
+func update_inventory_display():
+	var display = get_node_or_null(\"../InventoryDisplay/VBoxContainer\")
+	if display:
+		# Clear old labels
+		for child in display.get_children():
+			if child is Label and child.text != \"Inventory:\":
+				child.queue_free()
+		
+		# Add new labels
+		for upgrade in picked_items:
+			var label = Label.new()
+			label.text = \"• \" + upgrade.upgrade_name
+			display.add_child(label)
+"
+
+[node name="TestItemPickup" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = SubResource("GDScript_m5li2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+
+[node name="TestSpawner" type="Node2D" parent="."]
+script = SubResource("GDScript_6vyjn")
+
+[node name="InventoryDisplay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InventoryDisplay"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="InventoryDisplay"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

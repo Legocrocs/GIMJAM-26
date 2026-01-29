@@ -1,7 +1,7 @@
 # grid_manager.gd
 extends Node
 
-const GRID_SIZE = Vector2i(10, 8)  # ← Ganti jadi 10x8
+const GRID_SIZE = Vector2i(14, 12)  # ← Ganti jadi 10x8
 
 # Grid state - true = blocked, false = available
 var grid_state: Array = []
