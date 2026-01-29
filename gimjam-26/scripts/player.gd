@@ -1,7 +1,9 @@
 extends CharacterBody2D
 
+@export var health: int = 5
 @export var speed = 150
 @onready var anim_sprite = $AnimatedSprite2D
+var is_invincible: bool = false
 
 #@export var exit0_target_map_index: int = 1  # exit 0 goes to map 1 (change if needed)
 #
@@ -29,6 +31,20 @@ func change_state(dir):
 		anim_sprite.play("walk_h")
 		anim_sprite.flip_h = (dir.x < 0)
 
+func take_damage(amount: int):
+	health -= amount
+	print("Player Health: ", health)
+	if health <= 0:
+		print ("No health lmao")
+		#die()
+
+func start_invincibility():
+	is_invincible = true
+	# Visual feedback: Flash red
+	modulate = Color.RED
+	await get_tree().create_timer(0.2).timeout
+	modulate = Color.WHITE
+	is_invincible = false
 #func _check_exit0_transition() -> void:
 	#if map_layer == null:
 		#print("no map_layer (TileMapLayer not found)")
