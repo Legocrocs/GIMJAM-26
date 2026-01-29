@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://chd285h0grxy5"]
+[gd_scene load_steps=16 format=3 uid="uid://chd285h0grxy5"]
 
 [ext_resource type="Script" uid="uid://dihexcpc8qee4" path="res://player_projectile.gd" id="1_1nfi7"]
 [ext_resource type="Texture2D" uid="uid://dh33ocmkslgq3" path="res://assets/character/projectiles/All_Fire_Bullet_Pixel_16x16_00.png" id="2_iaq34"]
+[ext_resource type="Texture2D" uid="uid://c5ojgtv4eb7lw" path="res://assets/character/carrot_projectile.png" id="3_iaq34"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1nfi7"]
 radius = 2.0396078
@@ -23,20 +24,12 @@ atlas = ExtResource("2_iaq34")
 region = Rect2(224, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wl7mq"]
-atlas = ExtResource("2_iaq34")
-region = Rect2(176, 16, 16, 16)
+atlas = ExtResource("3_iaq34")
+region = Rect2(0, 0, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rs37m"]
-atlas = ExtResource("2_iaq34")
-region = Rect2(192, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xygqn"]
-atlas = ExtResource("2_iaq34")
-region = Rect2(208, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hsik6"]
-atlas = ExtResource("2_iaq34")
-region = Rect2(224, 16, 16, 16)
+atlas = ExtResource("3_iaq34")
+region = Rect2(8, 0, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r1qtc"]
 atlas = ExtResource("2_iaq34")
@@ -79,12 +72,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_rs37m")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xygqn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hsik6")
 }],
 "loop": true,
 "name": &"var2",
@@ -121,7 +108,7 @@ shape = SubResource("CircleShape2D_1nfi7")
 z_index = -5
 sprite_frames = SubResource("SpriteFrames_cv7vt")
 animation = &"var2"
-frame_progress = 0.46921363
+autoplay = "var2"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
