@@ -1,10 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://dwet4kaqowj6n"]
+[gd_scene load_steps=23 format=3 uid="uid://dwet4kaqowj6n"]
 
 [ext_resource type="Script" uid="uid://drby172likx7n" path="res://scripts/player.gd" id="1_hrnqq"]
 [ext_resource type="Texture2D" uid="uid://cl6cj3iblfiid" path="res://assets/character/prototype_character.png" id="1_wgl7f"]
 [ext_resource type="Script" uid="uid://bc0lxwevitmue" path="res://scenes/gameplay/aim_indicator.gd" id="3_dap4h"]
-[ext_resource type="Texture2D" uid="uid://d0c0fdbn6fku" path="res://assets/ui/custom_cursor.png" id="6_03k2y"]
-[ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="7_olumy"]
+[ext_resource type="Texture2D" uid="uid://7ftalcv1oj75" path="res://assets/character/weapon/watering_can.png" id="5_ki2oj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hrnqq"]
 atlas = ExtResource("1_wgl7f")
@@ -149,7 +148,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ki2oj"]
 size = Vector2(20, 19)
 
-[node name="Player" type="CharacterBody2D" groups=["Player"]]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_hrnqq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -163,20 +162,18 @@ frame_progress = 0.22229178
 position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_ki2oj")
 
-[node name="AimController" type="Node2D" parent="."]
+[node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("3_dap4h")
-default_pointer = ExtResource("6_03k2y")
-left_weapon = ExtResource("7_olumy")
 
-[node name="Timer" type="Timer" parent="AimController"]
+[node name="Timer" type="Timer" parent="Node2D"]
 wait_time = 0.3
 one_shot = true
 
-[node name="AimPointer" type="Sprite2D" parent="AimController"]
+[node name="AimPointer" type="Sprite2D" parent="Node2D"]
 scale = Vector2(2, 2)
-texture = ExtResource("6_03k2y")
+texture = ExtResource("5_ki2oj")
 
-[node name="AimLine" type="Line2D" parent="AimController"]
+[node name="AimLine" type="Line2D" parent="Node2D"]
 visible = false
 points = PackedVector2Array(15, 0, 0, 0)
 width = 1.0

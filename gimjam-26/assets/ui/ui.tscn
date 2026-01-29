@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://c6p1di5csjx74"]
+
+[ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scenes/gameplay/world_drop_zone.gd" id="1_7li5t"]
+[ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scenes/gameplay/add_test_item.gd" id="2_ypchb"]
+[ext_resource type="PackedScene" uid="uid://uiexcroth68s" path="res://assets/items/item.tscn" id="3_1chgj"]
+[ext_resource type="Script" uid="uid://c4yjygcm18e01" path="res://weapon_data.gd" id="4_4bosa"]
+[ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="5_p2cux"]
+[ext_resource type="Resource" uid="uid://ddo4mlpeche01" path="res://assets/character/weapon/Watering_Can_Weapon.tres" id="6_wcm4q"]
+[ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="7_lquf4"]
+[ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://assets/ui/player_inventory.tscn" id="8_ci7oy"]
+[ext_resource type="Texture2D" uid="uid://bpvkficrnkgtn" path="res://assets/ui/player_overlay.png" id="9_c7da0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ys1jj"]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="PlayerInventory" parent="." instance=ExtResource("8_ci7oy")]
+offset_left = 761.00006
+offset_right = -303.99994
+offset_bottom = -504.0
+scale = Vector2(2.25, 2.25)
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="Area2D" type="Area2D" parent="PlayerInventory"]
+z_index = 6
+position = Vector2(29.333328, 60.000008)
+script = ExtResource("2_ypchb")
+drop_scene = ExtResource("3_1chgj")
+loot_table = Array[ExtResource("4_4bosa")]([ExtResource("5_p2cux"), ExtResource("6_wcm4q")])
+player_pos = ExtResource("7_lquf4")
+
+[node name="ColorRect" type="ColorRect" parent="PlayerInventory/Area2D"]
+z_index = 3
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.3372549, 0.42352942, 0.5254902, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerInventory/Area2D"]
+shape = SubResource("RectangleShape2D_ys1jj")
+
+[node name="Foreground" type="Sprite2D" parent="."]
+z_index = 3
+scale = Vector2(4.5, 4.5)
+texture = ExtResource("9_c7da0")
+centered = false
+
+[node name="WorldDropZone" type="Control" parent="Foreground"]
+layout_mode = 3
+anchor_left = 0.22761437
+anchor_top = 0.19135803
+anchor_right = 1.1348041
+anchor_bottom = 1.080247
+offset_left = -30.694445
+offset_top = -19.555557
+offset_right = -30.694473
+offset_bottom = -19.555573
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_7li5t")
+metadata/_edit_use_anchors_ = true
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="input_event" from="PlayerInventory/Area2D" to="PlayerInventory/Area2D" method="_on_input_event"]
+[connection signal="mouse_entered" from="PlayerInventory/Area2D" to="PlayerInventory/Area2D" method="_on_mouse_entered"]

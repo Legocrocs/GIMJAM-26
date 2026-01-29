@@ -3,6 +3,9 @@ extends CharacterBody2D
 @export var speed = 150
 @onready var anim_sprite = $AnimatedSprite2D
 
+func _ready() -> void:
+	pass
+	
 func get_input():
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	velocity = input_direction * speed
