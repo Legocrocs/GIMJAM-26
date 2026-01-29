@@ -13,6 +13,10 @@ extends Node2D
 @export var transition_duration: float = 1.5
 @export var transition_requires_esc: bool = true
 
+# NEW: ESC prompt label
+@export var esc_prompt_label_path: NodePath = NodePath("Label")
+@export var esc_prompt_blink_period: float = 1.5 # full blink cycle (on->off->on) every 1.5s
+
 var current_map: Node2D = null
 var _current_map_index: int = 0
 var _map_xforms: Dictionary = {}
@@ -27,12 +31,28 @@ var _trans: Node2D = null
 var _room_cleared: bool = false
 var _spawners: Array = []
 
+# NEW: blinking label runtime
+var _esc_label: CanvasItem = null
+var _blink_timer: Timer = null
+var _blink_visible := true
+
 
 func _ready() -> void:
 	_trans = get_node_or_null(transition_node_path) as Node2D
 	if _trans != null:
 		_trans.visible = false
 		_trans.z_index = 9999
+
+	# ESC prompt label setup
+	_esc_label = get_node_or_null(esc_prompt_label_path) as CanvasItem
+	if _esc_label != null:
+		_esc_label.visible = false
+
+	_blink_timer = Timer.new()
+	_blink_timer.one_shot = false
+	_blink_timer.wait_time = max(0.05, esc_prompt_blink_period * 0.5) # toggle twice per cycle
+	_blink_timer.timeout.connect(_on_blink_timeout)
+	add_child(_blink_timer)
 
 	_autoload_scenes_and_xforms_from_children()
 
@@ -45,6 +65,7 @@ func _ready() -> void:
 
 	# Start state: normal gameplay (not in ESC lock)
 	_finish_transition_if_needed(true)
+	_show_esc_prompt(false)
 
 
 func _autoload_scenes_and_xforms_from_children() -> void:
@@ -89,7 +110,7 @@ func load_map(which: int) -> void:
 		return
 
 	_remove_exit_trigger()
-	_stop_all_spawners() # <- IMPORTANT
+	_stop_all_spawners()
 
 	# Remove old map completely
 	if is_instance_valid(current_map):
@@ -128,7 +149,6 @@ func load_map(which: int) -> void:
 	_cache_spawners_for_current_map()
 	_wire_spawner_signals()
 
-	# If there are no spawners, consider room cleared immediately
 	if _spawners.is_empty():
 		_room_cleared = true
 
@@ -137,11 +157,13 @@ func load_map(which: int) -> void:
 		_create_exit_trigger(layer)
 
 	# Start spawning ONLY if we are not currently waiting for ESC
-	# (this prevents spawn-before-ESC completely)
 	if not _transition_waiting_for_esc:
 		_start_all_spawners()
 
 	_update_exit_enabled()
+
+	# ✅ NEW: show blinking ESC prompt ONLY after new map is loaded, and only if waiting for ESC
+	_show_esc_prompt(_transition_waiting_for_esc)
 
 
 func _wait_for_layer_gates(layer: TileMapLayer, max_frames: int = 240) -> void:
@@ -227,7 +249,6 @@ func _create_exit_trigger(layer: TileMapLayer) -> void:
 
 	_exit_trigger.body_entered.connect(_on_exit_trigger_body_entered)
 
-	# wait initial delay (but still won’t enable unless room cleared + not ESC-locked)
 	await get_tree().physics_frame
 	for _i in range(exit_trigger_delay_frames):
 		await get_tree().physics_frame
@@ -239,9 +260,6 @@ func _update_exit_enabled() -> void:
 	if not is_instance_valid(_exit_trigger):
 		return
 
-	# Exit is only enabled when:
-	# - room is cleared (all enemies dead)
-	# - not waiting for ESC
 	_exit_trigger.monitoring = (_room_cleared and not _transition_waiting_for_esc)
 
 
@@ -253,7 +271,6 @@ func _on_exit_trigger_body_entered(body: Node) -> void:
 	if body != player:
 		return
 
-	# hard gate: if room not cleared, ignore
 	if not _room_cleared:
 		return
 
@@ -273,12 +290,13 @@ func _on_exit_trigger_body_entered(body: Node) -> void:
 
 
 func _play_between_maps_transition(next_index: int) -> void:
-	# stop spawners immediately
 	_stop_all_spawners()
 
 	if is_instance_valid(current_map):
 		current_map.visible = false
 
+	# During the 1.5s "Trans" screen: DO NOT show the ESC label
+	_show_esc_prompt(false)
 	_show_trans(true)
 	await get_tree().create_timer(transition_duration).timeout
 
@@ -286,6 +304,7 @@ func _play_between_maps_transition(next_index: int) -> void:
 
 	await get_tree().process_frame
 	_show_trans(false)
+	# Label will be shown by load_map() if we're waiting for ESC
 
 
 func _show_trans(show: bool) -> void:
@@ -299,7 +318,6 @@ func _show_trans(show: bool) -> void:
 
 # ---------------------------------------------------------
 # ESC Transition lock (keep existing behavior)
-# + NEW: also prevents spawning until ESC
 # ---------------------------------------------------------
 func _begin_transition() -> void:
 	_transition_waiting_for_esc = true
@@ -312,9 +330,11 @@ func _begin_transition() -> void:
 
 	_set_player_controls_enabled(false)
 
-	# NEW: lock exit + stop spawning while waiting for ESC
 	_stop_all_spawners()
 	_update_exit_enabled()
+
+	# IMPORTANT: label should NOT show yet (shows after new map loads)
+	_show_esc_prompt(false)
 
 
 func _finish_transition() -> void:
@@ -330,9 +350,11 @@ func _finish_transition() -> void:
 		if player is CharacterBody2D:
 			(player as CharacterBody2D).velocity = Vector2.ZERO
 
-	# NEW: start spawners only now (prevents spawn-before-ESC)
 	_start_all_spawners()
 	_update_exit_enabled()
+
+	# ✅ hide label after ESC
+	_show_esc_prompt(false)
 
 
 func _finish_transition_if_needed(force: bool = false) -> void:
@@ -369,6 +391,31 @@ func _set_node_processing_recursive(n: Node, enabled: bool) -> void:
 
 
 # ---------------------------------------------------------
+# NEW: ESC prompt blink handling
+# ---------------------------------------------------------
+func _show_esc_prompt(show: bool) -> void:
+	if _esc_label == null:
+		return
+
+	if show:
+		_blink_visible = true
+		_esc_label.visible = true
+		if _blink_timer != null and _blink_timer.is_stopped():
+			_blink_timer.start()
+	else:
+		if _blink_timer != null:
+			_blink_timer.stop()
+		_esc_label.visible = false
+
+
+func _on_blink_timeout() -> void:
+	if _esc_label == null:
+		return
+	_blink_visible = not _blink_visible
+	_esc_label.visible = _blink_visible
+
+
+# ---------------------------------------------------------
 # Spawner + room clear handling
 # ---------------------------------------------------------
 func _cache_spawners_for_current_map() -> void:
@@ -376,7 +423,6 @@ func _cache_spawners_for_current_map() -> void:
 	if not is_instance_valid(current_map):
 		return
 
-	# Find any spawner scripts (group-based)
 	for node in current_map.get_children():
 		_collect_spawners_recursive(node)
 
@@ -389,31 +435,25 @@ func _collect_spawners_recursive(n: Node) -> void:
 
 
 func _wire_spawner_signals() -> void:
-	# mark room cleared when ANY spawner emits cleared,
-	# but only once ALL spawners are cleared
 	for sp in _spawners:
 		if sp.has_signal("room_cleared"):
-			# avoid double connections
 			if not sp.room_cleared.is_connected(_on_any_spawner_room_cleared):
 				sp.room_cleared.connect(_on_any_spawner_room_cleared)
 
 
 func _on_any_spawner_room_cleared() -> void:
-	# room cleared only when ALL spawners cleared
 	for sp in _spawners:
 		if sp.has_method("is_cleared"):
 			if not sp.is_cleared():
 				return
-	# all cleared
+
 	_room_cleared = true
 	_update_exit_enabled()
 
 
 func _start_all_spawners() -> void:
-	# only start if not already cleared
 	if _room_cleared:
 		return
-
 	for sp in _spawners:
 		if sp.has_method("start_spawning"):
 			sp.start_spawning()
