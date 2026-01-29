@@ -8,7 +8,7 @@ func set_item(new_weapon:WeaponData):
 	
 	if weapon_data:
 		texture_normal = weapon_data.weapon_texture
-		size = Vector2(24, 24)
+		size = Vector2(16, 16)
 		tooltip_text = weapon_data.weapon_name
 	else:
 		texture_normal = null
@@ -20,7 +20,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	var preview = TextureRect.new()
 	preview.texture = texture_normal
 	preview.expand_mode = true
-	preview.size = Vector2(32, 32)
+	preview.size = Vector2(16, 16)
 	
 	
 	var control = Control.new()

@@ -8,8 +8,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -978.0
-offset_bottom = -360.0
+offset_right = -1065.0
+offset_bottom = -504.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -22,7 +22,7 @@ offset_bottom = 40.0
 texture = ExtResource("1_qvkuw")
 stretch_mode = 3
 
-[node name="EquipSlots" parent="TextureRect" instance=ExtResource("2_cmthp")]
+[node name="EquipSlots" parent="TextureRect" groups=["PlayerInventory"] instance=ExtResource("2_cmthp")]
 layout_mode = 1
 offset_left = 20.0
 offset_top = 107.75

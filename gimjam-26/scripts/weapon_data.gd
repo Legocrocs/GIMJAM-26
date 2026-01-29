@@ -25,6 +25,7 @@ func spawn_projectile(root_node: Node, origin: Vector2, direction: Vector2):
 	var bullet = projectile_scene.instantiate()
 	bullet.global_position = origin
 	
+	
 	if "speed" in bullet:
 		bullet.speed = projectile_speed
 		

@@ -1,17 +1,17 @@
-[gd_resource type="Resource" script_class="WeaponData" load_steps=4 format=3 uid="uid://dx131xxrx75ha"]
+[gd_resource type="Resource" script_class="WateringCanWeapon" load_steps=4 format=3 uid="uid://dx131xxrx75ha"]
 
 [ext_resource type="PackedScene" uid="uid://chd285h0grxy5" path="res://scenes/gameplay/player_projectile.tscn" id="1_enhx3"]
-[ext_resource type="Script" uid="uid://c4yjygcm18e01" path="res://weapon_data.gd" id="1_w4f5h"]
+[ext_resource type="Script" uid="uid://cvp2kijh4862d" path="res://scripts/watering_can.gd" id="2_enhx3"]
 [ext_resource type="Texture2D" uid="uid://cn3428f7irm4b" path="res://assets/character/weapon/watering_can_alt.png" id="3_enhx3"]
 
 [resource]
-script = ExtResource("1_w4f5h")
+script = ExtResource("2_enhx3")
 weapon_texture = ExtResource("3_enhx3")
 projectile_scene = ExtResource("1_enhx3")
 fire_rate = 0.1
 projectile_per_shot = 2
 projectile_speed = 100.0
-spread = 10.0
+spread = 40.0
 lifetime = 1.0
 damage = 1.0
 metadata/_custom_type_script = "uid://c4yjygcm18e01"

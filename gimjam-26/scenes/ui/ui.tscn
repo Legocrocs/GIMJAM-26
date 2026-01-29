@@ -1,13 +1,13 @@
 [gd_scene load_steps=11 format=3 uid="uid://c6p1di5csjx74"]
 
-[ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scenes/gameplay/world_drop_zone.gd" id="1_7li5t"]
-[ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scenes/gameplay/add_test_item.gd" id="2_ypchb"]
-[ext_resource type="PackedScene" uid="uid://uiexcroth68s" path="res://assets/items/item.tscn" id="3_1chgj"]
-[ext_resource type="Script" uid="uid://c4yjygcm18e01" path="res://weapon_data.gd" id="4_4bosa"]
+[ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scripts/world_drop_zone.gd" id="1_7li5t"]
+[ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scripts/add_test_item.gd" id="2_ypchb"]
+[ext_resource type="PackedScene" uid="uid://uiexcroth68s" path="res://scenes/gameplay/item.tscn" id="3_1chgj"]
+[ext_resource type="Script" uid="uid://c4yjygcm18e01" path="res://scripts/weapon_data.gd" id="4_4bosa"]
 [ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="5_p2cux"]
 [ext_resource type="Resource" uid="uid://ddo4mlpeche01" path="res://assets/character/weapon/Watering_Can_Weapon.tres" id="6_wcm4q"]
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="7_lquf4"]
-[ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://assets/ui/player_inventory.tscn" id="8_ci7oy"]
+[ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://scenes/ui/player_inventory.tscn" id="8_ci7oy"]
 [ext_resource type="Texture2D" uid="uid://bpvkficrnkgtn" path="res://assets/ui/player_overlay.png" id="9_c7da0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ys1jj"]

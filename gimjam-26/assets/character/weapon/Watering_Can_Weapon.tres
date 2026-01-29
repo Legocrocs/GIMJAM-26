@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="WateringCanWeapon" load_steps=4 format=3 uid="uid://ddo4mlpeche01"]
 
 [ext_resource type="PackedScene" uid="uid://chd285h0grxy5" path="res://scenes/gameplay/player_projectile.tscn" id="1_8epwv"]
-[ext_resource type="Script" uid="uid://cvp2kijh4862d" path="res://watering_can.gd" id="1_tayk5"]
+[ext_resource type="Script" uid="uid://cvp2kijh4862d" path="res://scripts/watering_can.gd" id="1_tayk5"]
 [ext_resource type="Texture2D" uid="uid://7ftalcv1oj75" path="res://assets/character/weapon/watering_can.png" id="2_ougp4"]
 
 [resource]
