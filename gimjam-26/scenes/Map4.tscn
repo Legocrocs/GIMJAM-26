@@ -55,6 +55,7 @@ script = ExtResource("2_tbtuc")
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_tbtuc")]
 position = Vector2(-59, 35)
+MaxEnemy = 5
 
 [node name="EnemySpawner2" parent="." instance=ExtResource("3_tbtuc")]
 position = Vector2(33, 14)
