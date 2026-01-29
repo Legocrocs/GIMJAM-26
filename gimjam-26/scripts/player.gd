@@ -3,6 +3,8 @@ extends CharacterBody2D
 @export var health: int = 5
 @export var speed = 150
 @onready var anim_sprite = $AnimatedSprite2D
+@onready var damaged: AudioStreamPlayer2D = $damaged
+@onready var death: AudioStreamPlayer2D = $death
 var is_invincible: bool = false
 
 func get_input():
@@ -30,6 +32,9 @@ func take_damage(amount: int):
 	if health <= 0:
 		print ("No health lmao")
 		#die()
+		$death.play()
+	else:
+		$damaged.play()
 
 func start_invincibility():
 	is_invincible = true
