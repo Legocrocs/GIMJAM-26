@@ -8,7 +8,7 @@ var damage_timer: float = 0.0
 @export var damage_interval: float = 1.0 
 
 func _ready():
-	player = get_tree().get_first_node_in_group("player")
+	player = get_tree().get_first_node_in_group("Player")
 
 func _physics_process(delta): 
 	if player:
@@ -21,7 +21,7 @@ func _physics_process(delta):
 		elif direction.x > 0:
 			$AnimatedSprite2D.flip_h = false
 	else:
-		player = get_tree().get_first_node_in_group("player")
+		player = get_tree().get_first_node_in_group("Player")
 	
 	damage_timer += delta
 	if damage_timer >= damage_interval:
@@ -55,6 +55,6 @@ func die():
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player") or body.name == "Player": 
+	if body.is_in_group("Player") or body.name == "Player": 
 		if body.has_method("take_damage"):
 			body.take_damage(1)

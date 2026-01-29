@@ -50,7 +50,7 @@ sources/0 = SubResource("TileSetAtlasSource_o42fw")
 
 [node name="EnemySpawner4" parent="." instance=ExtResource("3_lbyhi")]
 position = Vector2(47, -38)
-MaxEnemy = 3
+MaxEnemy = 2
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 scale = Vector2(1.5, 1.5)
@@ -60,15 +60,15 @@ script = ExtResource("2_qmevn")
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_lbyhi")]
 position = Vector2(47, 35)
-MaxEnemy = 3
+MaxEnemy = 2
 
 [node name="EnemySpawner2" parent="." instance=ExtResource("3_lbyhi")]
 position = Vector2(-63, -38)
-MaxEnemy = 3
+MaxEnemy = 2
 
 [node name="EnemySpawner3" parent="." instance=ExtResource("3_lbyhi")]
 position = Vector2(-60, 39)
-MaxEnemy = 3
+MaxEnemy = 2
 
 [node name="EnemySpawner5" parent="." instance=ExtResource("3_lbyhi")]
 position = Vector2(-7, 0)
