@@ -1,0 +1,98 @@
+[gd_scene load_steps=14 format=3 uid="uid://8154no3rf282"]
+
+[ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
+[ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
+[ext_resource type="Script" uid="uid://c1a8sdxkde6in" path="res://scenes/maps.gd" id="2_mngbo"]
+[ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="3_4w45t"]
+[ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
+[ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
+[ext_resource type="PackedScene" uid="uid://y0epvir6w06o" path="res://scenes/Map2.tscn" id="4_r6p65"]
+[ext_resource type="PackedScene" uid="uid://bcsijmsk01gxr" path="res://scenes/Map3.tscn" id="5_si52b"]
+[ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="6_01n6w"]
+[ext_resource type="PackedScene" uid="uid://bc6c2xvvdw2t7" path="res://scenes/Map5.tscn" id="7_6u1mn"]
+[ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_r6p65"]
+[ext_resource type="FontFile" uid="uid://bxcq0j5lwucvd" path="res://Font/PixelifySans-Medium.ttf" id="9_mngbo"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
+
+[node name="MainScene" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -5
+position = Vector2(1, 0)
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("1_jhgck")
+script = ExtResource("2_mngbo")
+esc_prompt_label_path = NodePath("../Label")
+
+[node name="Map1" parent="Background" instance=ExtResource("3_4w45t")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map2" parent="Background" instance=ExtResource("4_r6p65")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map3" parent="Background" instance=ExtResource("5_si52b")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map4" parent="Background" instance=ExtResource("6_01n6w")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Map5" parent="Background" instance=ExtResource("7_6u1mn")]
+position = Vector2(-36.444, 1.333)
+
+[node name="Trans" parent="Background" instance=ExtResource("8_r6p65")]
+visible = false
+position = Vector2(-36.444443, 1.3333334)
+scale = Vector2(0.9, 0.88286823)
+
+[node name="Border" type="StaticBody2D" parent="."]
+position = Vector2(1, 0)
+
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(-96, 144)
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2(-273, 15)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2(-103, -143)
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2(79, 8)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_rmjae")
+
+[node name="Player" parent="." instance=ExtResource("1_gh4kw")]
+position = Vector2(6, -24)
+
+[node name="Projectiles" type="Node" parent="." groups=["projectile_group"]]
+
+[node name="Foreground" type="Sprite2D" parent="."]
+z_index = 3
+scale = Vector2(2.25, 2.25)
+texture = ExtResource("3_ys1jj")
+
+[node name="EquipSlots" parent="." instance=ExtResource("4_jhgck")]
+z_index = 3
+offset_left = 144.0
+offset_top = 86.0
+offset_right = 144.0
+offset_bottom = 86.0
+scale = Vector2(2, 2)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -178.0
+offset_top = 112.0
+offset_right = 26.0
+offset_bottom = 130.4375
+theme_override_fonts/font = ExtResource("9_mngbo")
+theme_override_font_sizes/font_size = 15
+text = "press esc to exit edit mode"

@@ -58,3 +58,4 @@ position = Vector2(-59, 35)
 
 [node name="EnemySpawner2" parent="." instance=ExtResource("3_tbtuc")]
 position = Vector2(33, 14)
+MaxEnemy = 5
