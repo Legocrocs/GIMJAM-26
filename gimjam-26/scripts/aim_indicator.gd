@@ -37,6 +37,7 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_pressed("shoot") and left_weapon:
 		# Quickly swap "current_weapon" context for the logic to work
+		print("shoot")
 		if current_weapon != left_weapon:
 			current_weapon = left_weapon
 			_setup_weapon()

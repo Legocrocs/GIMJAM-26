@@ -1,10 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://dwet4kaqowj6n"]
+[gd_scene load_steps=18 format=3 uid="uid://dwet4kaqowj6n"]
 
 [ext_resource type="Script" uid="uid://drby172likx7n" path="res://scripts/player.gd" id="1_hrnqq"]
 [ext_resource type="Texture2D" uid="uid://bi51nxt70ljlc" path="res://assets/character/carrot.png" id="2_ki2oj"]
-[ext_resource type="Texture2D" uid="uid://d0c0fdbn6fku" path="res://assets/ui/custom_cursor.png" id="3_0j0ot"]
-[ext_resource type="Script" uid="uid://bc0lxwevitmue" path="res://scenes/gameplay/aim_indicator.gd" id="3_dap4h"]
-[ext_resource type="PackedScene" uid="uid://chd285h0grxy5" path="res://scenes/gameplay/player_projectile.tscn" id="4_ki2oj"]
+[ext_resource type="Texture2D" uid="uid://d0c0fdbn6fku" path="res://gill backup/assets/ui/custom_cursor.png" id="3_0j0ot"]
+[ext_resource type="Script" uid="uid://bc0lxwevitmue" path="res://scripts/aim_indicator.gd" id="3_dap4h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_03k2y"]
 atlas = ExtResource("2_ki2oj")
@@ -124,7 +123,6 @@ shape = SubResource("RectangleShape2D_ki2oj")
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("3_dap4h")
-projectile_scene = ExtResource("4_ki2oj")
 
 [node name="Timer" type="Timer" parent="Node2D"]
 wait_time = 0.3
