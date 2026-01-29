@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://3tq01fh10vsj"]
+
+[ext_resource type="Texture2D" uid="uid://dwepq84fh3igq" path="res://assets/ui/inventory_panel.png" id="1_f8qnf"]
+[ext_resource type="Texture2D" uid="uid://ct7uf8sc75hnr" path="res://assets/ui/inventory_slot.png" id="2_q5ho7"]
+
+[node name="PlayerInventory" type="Control"]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 105.0
+offset_bottom = 30.0
+
+[node name="InvenBG" type="Sprite2D" parent="."]
+texture = ExtResource("1_f8qnf")
+centered = false
+
+[node name="InventWindow" type="GridContainer" parent="."]
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = -12.0
+offset_right = 49.5
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 1
+columns = 4
+
+[node name="InventSlot" type="Button" parent="InventWindow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="SlotTexture" type="TextureRect" parent="InventWindow/InventSlot"]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = ExtResource("2_q5ho7")
+
+[node name="InventSlot2" type="Button" parent="InventWindow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="SlotTexture" type="TextureRect" parent="InventWindow/InventSlot2"]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = ExtResource("2_q5ho7")
+
+[node name="InventSlot3" type="Button" parent="InventWindow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="SlotTexture" type="TextureRect" parent="InventWindow/InventSlot3"]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = ExtResource("2_q5ho7")
+
+[node name="InventSlot4" type="Button" parent="InventWindow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="SlotTexture" type="TextureRect" parent="InventWindow/InventSlot4"]
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = ExtResource("2_q5ho7")
