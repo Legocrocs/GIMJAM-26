@@ -1,12 +1,12 @@
 extends Area2D
 
-@export var drop_scene: PackedScene # Assign WorldItem.tscn here
+@export var item_scene: PackedScene # Assign WorldItem.tscn here
 @export var loot_table: Array[WeaponData] # Drag your weapon resources here
 @export var player_pos: PackedScene
 
 func spawn_random_drop():
 	# 1. Instantiate the World Item container
-	var drop = drop_scene.instantiate()
+	var drop = item_scene.instantiate()
 	
 	# 2. Pick a random weapon
 	var random_weapon = loot_table.pick_random()
@@ -23,8 +23,10 @@ func spawn_random_drop():
 	# Assuming TextureButton is the first child or named "TextureButton"
 	drop.get_node("TextureButton").set_item(random_weapon)
 
-func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
-	if event is InputEventMouseButton and MouseButton.MOUSE_BUTTON_LEFT:
-		print("mouse in area")
-		print("spawn item")
-		spawn_random_drop()
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_P:
+			
+		#print("mouse in area")
+		#print("spawn item")
+			spawn_random_drop()
