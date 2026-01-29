@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8kkvda3yjd2e"]
+
+[ext_resource type="Script" uid="uid://tbr1w3wwodf6" path="res://scenes/gameplay/enemies/boss_corn_projectile.gd" id="1_f623h"]
+[ext_resource type="Texture2D" uid="uid://db1a5frkeyu3e" path="res://assets/character/boss_corn_projectile.png" id="1_gj0ja"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f623h"]
+atlas = ExtResource("1_gj0ja")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xht7t"]
+atlas = ExtResource("1_gj0ja")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y8f71"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f623h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xht7t")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gj0ja"]
+radius = 2.0396078
+
+[node name="BossCornProjectile" type="Area2D"]
+scale = Vector2(2.5, 2.5)
+script = ExtResource("1_f623h")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_y8f71")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gj0ja")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
