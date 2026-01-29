@@ -1,6 +1,7 @@
 extends Area2D
 
 @onready var collision = $CollisionShape2D
+@onready var anim = $AnimatedSprite2D
 @export var speed = 100
 
 var direction: Vector2 = Vector2.ZERO
@@ -13,6 +14,7 @@ func _physics_process(delta):
 	position += direction * speed * delta # Moves toward the player
 
 func _on_body_entered(body: Node2D) -> void:
+	print(body)
 	if body.has_method("take_damage"):
 		body.take_damage(1)
 		queue_free()

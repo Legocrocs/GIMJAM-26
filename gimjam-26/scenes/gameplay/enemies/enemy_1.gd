@@ -31,7 +31,7 @@ func _physics_process(delta):
 func check_for_player_damage():
 	var overlapping_bodies = $Area2D.get_overlapping_bodies()
 	for body in overlapping_bodies:
-		if body.is_in_group("player"):
+		if body.is_in_group("Player"):
 			if body.has_method("take_damage"):
 				body.take_damage(1)
 
@@ -55,6 +55,7 @@ func die():
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
+	print(body)
 	if body.is_in_group("Player") or body.name == "Player": 
 		if body.has_method("take_damage"):
 			body.take_damage(1)
