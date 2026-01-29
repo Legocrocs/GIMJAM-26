@@ -31,9 +31,6 @@ func _physics_process(_delta):
 		var distance_to_player = global_position.distance_to(player.global_position)
 		if distance_to_player < 20:  # 20 pixel threshold
 			move_direction = -move_direction  # Push away
-		
-		if Engine.get_process_frames() % 60 == 0:
-			print("Enemy moving: (%.2f, %.2f)" % [move_direction.x, move_direction.y])
 	
 	velocity = move_direction * speed
 	

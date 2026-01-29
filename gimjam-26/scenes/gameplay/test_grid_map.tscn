@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://cg4l0df6gupwd"]
+
+[ext_resource type="Texture2D" uid="uid://cygrmebgrqgf3" path="res://assets/tiles/tileset.png" id="2_y0gdl"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5rjv6"]
+texture = ExtResource("2_y0gdl")
+texture_region_size = Vector2i(8, 8)
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+0:0/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_amgyd"]
+sources/0 = SubResource("TileSetAtlasSource_5rjv6")
+
+[node name="TestGridMap" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_amgyd")
+format = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="DebugLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "ds"
