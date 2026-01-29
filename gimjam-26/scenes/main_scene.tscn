@@ -50,6 +50,7 @@ visible = false
 position = Vector2(-36.444, 1.333)
 
 [node name="Map6" parent="Background" instance=ExtResource("3_si52b")]
+position = Vector2(-36.444, 1.333)
 
 [node name="Trans" parent="Background" instance=ExtResource("8_r6p65")]
 visible = false
