@@ -1,7 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://chd285h0grxy5"]
+[gd_scene load_steps=18 format=3 uid="uid://chd285h0grxy5"]
 
 [ext_resource type="Script" uid="uid://dihexcpc8qee4" path="res://player_projectile.gd" id="1_1nfi7"]
 [ext_resource type="Texture2D" uid="uid://dh33ocmkslgq3" path="res://assets/character/projectiles/All_Fire_Bullet_Pixel_16x16_00.png" id="2_iaq34"]
+[ext_resource type="AudioStream" uid="uid://ca780f2q8t1lc" path="res://assets/Music and sfx/shoot_fire_proj.mp3" id="3_iaq34"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1nfi7"]
 radius = 2.0396078
@@ -127,6 +128,9 @@ frame_progress = 0.46921363
 wait_time = 3.0
 one_shot = true
 autostart = true
+
+[node name="shootFireball" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_iaq34")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

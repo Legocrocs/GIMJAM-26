@@ -2,13 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
-[ext_resource type="PackedScene" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
+[ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
 [ext_resource type="Script" uid="uid://ceqvkabmvdsoo" path="res://scenes/gameplay/enemies/enemy_spawner.gd" id="5_nhqpi"]
 [ext_resource type="PackedScene" uid="uid://e0s1gsd07xx7" path="res://scenes/gameplay/enemies/enemy_1.tscn" id="5_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://krbpcnhcvjd" path="res://scenes/gameplay/Rooms/Room_variant_1.tscn" id="7_78thy"]
 [ext_resource type="PackedScene" uid="uid://bdtcvwjqemf2k" path="res://scenes/gameplay/enemies/boss_corn.tscn" id="7_urqen"]
 [ext_resource type="AudioStream" uid="uid://cohef4bh4xdaa" path="res://assets/Music and sfx/EthernightClub.mp3" id="8_78thy"]
-[ext_resource type="Script" uid="uid://t6lbbudcu0tk" path="res://scenes/gameplay/bgm_player.gd" id="9_86tpb"]
+[ext_resource type="Script" path="res://scenes/gameplay/bgm_player.gd" id="9_86tpb"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 

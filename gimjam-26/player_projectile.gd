@@ -1,6 +1,7 @@
 extends Area2D
 
 @onready var collision = $CollisionShape2D
+@onready var shoot_fireball: AudioStreamPlayer2D = $shootFireball
 @export var speed = 100
 
 var direction: Vector2 = Vector2.ZERO
