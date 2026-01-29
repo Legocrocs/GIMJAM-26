@@ -1,14 +1,13 @@
-# upgrade_item.gd
 class_name UpgradeItem
 extends Resource
 
-@export var upgrade_name: String = "Upgrade"
-@export var description: String = ""
+@export_group("Visuals")
+@export var upgrade_name: String = "Block"
+@export var icon: Texture2D # <-- The texture seen in inventory/world
+@export var color: Color = Color.WHITE # Optional: Tint the block
 
+@export_group("Grid Data")
+# The shape of the block on the grid (e.g., [[0,0], [1,0]] for 2-wide)
 @export var grid_shape: Array[Vector2i] = [Vector2i(0,0)]
-
-# FIX: Change type from Array[Vector2i] to just Array
-@export var tile_pattern: Array = [Vector2i(0, 3)]  # Remove [Vector2i] type
-
-@export var stat_type: String = "damage"
-@export var stat_value: float = 10.0
+# The atlas coordinates for the tiles placed in the world
+@export var tile_pattern: Array = [Vector2i(3, 4)]
