@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bx5t7sdyg3ujy"]
+[gd_scene load_steps=11 format=3 uid="uid://c6p1di5csjx74"]
 
 [ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scripts/world_drop_zone.gd" id="1_7li5t"]
 [ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scripts/add_test_item.gd" id="2_ypchb"]

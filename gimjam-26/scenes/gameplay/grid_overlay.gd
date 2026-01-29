@@ -1,152 +1,147 @@
 extends Control
 
-const GRID_SIZE = Vector2i(14, 12)
-# Keep your existing calibration values
-var grid_start_pos = Vector2(58.54546, 48.33329) 
-var cell_size = 46.3866939621603
-
-# Helper to store the block we are currently dragging over the grid
-var ghost_block: UpgradeItem = null 
-
+# Signals
 signal upgrade_placed(upgrade: UpgradeItem, grid_pos: Vector2i)
 
+# --- SETTINGS (Calibrated from your previous file) ---
+# Exported for easier adjustment in the Inspector
+@export var grid_dimensions := Vector2i(14, 12)
+@export var cell_size := 46.4
+@export var grid_start_pos := Vector2(58.5, 48.3)
+
+# --- STATE ---
+var ghost_block: UpgradeItem = null
+var ghost_grid_pos := Vector2i(-1, -1)
+
 func _ready():
-	# Visual setup: Make sure this overlay covers the whole screen to catch drops
-	anchors_preset = Control.PRESET_FULL_RECT
-	mouse_filter = Control.MOUSE_FILTER_PASS # Allow clicks to pass through if needed, but catch drops
+	# CRITICAL: Ensures this node can "catch" mouse events
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	
-	# Start hidden (Main Scene will toggle 'visible')
+	# Connect to GridManager updates if needed (optional)
+	if GridManager.has_signal("grid_updated"):
+		GridManager.grid_updated.connect(queue_redraw)
+
+# --- VISIBILITY CONTROL ---
+func show_grid():
+	visible = true
+	queue_redraw()
+
+func hide_grid():
 	visible = false
+	ghost_block = null
+	queue_redraw()
 
 # --- DRAWING LOGIC ---
-
 func _draw():
-	var grid_width = GRID_SIZE.x * cell_size
-	var grid_height = GRID_SIZE.y * cell_size
+	# 1. Draw the Grid Lines
+	draw_grid_lines()
 	
-	# 1. Draw Background
-	draw_rect(
-		Rect2(grid_start_pos, Vector2(grid_width, grid_height)), 
-		Color(0, 0, 0, 0.7), 
-		true
-	)
+	# 2. Draw Occupied Cells (orange blocks)
+	# [cite_start]This reads directly from your global GridManager [cite: 11]
+	draw_occupied_cells()
 	
-	# 2. Draw Grid Lines (Vertical)
-	for x in GRID_SIZE.x + 1:
-		var x_pos = grid_start_pos.x + x * cell_size
-		draw_line(
-			Vector2(x_pos, grid_start_pos.y),
-			Vector2(x_pos, grid_start_pos.y + grid_height),
-			Color.WHITE, 2.0
-		)
+	# 3. Draw the "Ghost" Block (Green/Red preview)
+	# This only appears when you are dragging a block over the grid
+	if ghost_block and ghost_grid_pos != Vector2i(-1, -1):
+		draw_preview_block(ghost_block, ghost_grid_pos)
+
+func draw_grid_lines():
+	var width = grid_dimensions.x * cell_size
+	var height = grid_dimensions.y * cell_size
 	
-	# 3. Draw Grid Lines (Horizontal)
-	for y in GRID_SIZE.y + 1:
-		var y_pos = grid_start_pos.y + y * cell_size
-		draw_line(
-			Vector2(grid_start_pos.x, y_pos),
-			Vector2(grid_start_pos.x + grid_width, y_pos),
-			Color.WHITE, 2.0
-		)
+	# Dark Background
+	draw_rect(Rect2(grid_start_pos, Vector2(width, height)), Color(0, 0, 0, 0.6), true)
 	
-	# 4. Draw Already Placed Blocks (Orange)
-	for y in GRID_SIZE.y:
-		for x in GRID_SIZE.x:
-			if GridManager.grid_state[y][x]:
+	# Vertical Lines
+	for x in range(grid_dimensions.x + 1):
+		var x_pos = grid_start_pos.x + (x * cell_size)
+		draw_line(Vector2(x_pos, grid_start_pos.y), Vector2(x_pos, grid_start_pos.y + height), Color.WHITE, 1.0)
+		
+	# Horizontal Lines
+	for y in range(grid_dimensions.y + 1):
+		var y_pos = grid_start_pos.y + (y * cell_size)
+		draw_line(Vector2(grid_start_pos.x, y_pos), Vector2(grid_start_pos.x + width, y_pos), Color.WHITE, 1.0)
+
+func draw_occupied_cells():
+	# Assumes GridManager is an Autoload/Singleton
+	var state = GridManager.grid_state
+	
+	for y in range(grid_dimensions.y):
+		for x in range(grid_dimensions.x):
+			if state[y][x]: # If cell is true (blocked)
 				var pos = grid_start_pos + Vector2(x * cell_size, y * cell_size)
-				draw_rect(
-					Rect2(pos, Vector2(cell_size, cell_size)), 
-					Color(1, 0.5, 0, 0.5), 
-					true
-				)
-	
-	# 5. Draw Ghost Preview (Green/Red)
-	if ghost_block:
-		var mouse_pos = get_local_mouse_position()
-		var grid_pos = screen_to_grid(mouse_pos)
-		
-		# Only draw if we are hovering over a valid grid cell
-		if grid_pos != Vector2i(-1, -1):
-			draw_upgrade_preview(grid_pos)
+				draw_rect(Rect2(pos, Vector2(cell_size, cell_size)), Color(1, 0.5, 0, 0.5), true)
 
-func draw_upgrade_preview(grid_pos: Vector2i):
-	# Check validity using GridManager
-	var is_valid = GridManager.is_valid_placement(ghost_block.grid_shape, grid_pos)
-	var color = Color(0, 1, 0, 0.7) if is_valid else Color(1, 0, 0, 0.7)
+func draw_preview_block(block: UpgradeItem, grid_pos: Vector2i):
+	# [cite_start]Check validity using the Manager [cite: 11]
+	var is_valid = GridManager.is_valid_placement(block.grid_shape, grid_pos)
+	var color = Color(0, 1, 0, 0.5) if is_valid else Color(1, 0, 0, 0.5)
 	
-	for offset in ghost_block.grid_shape:
+	for offset in block.grid_shape:
 		var cell = grid_pos + offset
-		
-		# Ensure the shape part is inside bounds before drawing
-		if cell.x >= 0 and cell.x < GRID_SIZE.x and cell.y >= 0 and cell.y < GRID_SIZE.y:
+		if is_cell_in_bounds(cell):
 			var pos = grid_start_pos + Vector2(cell.x * cell_size, cell.y * cell_size)
-			
-			# Draw fill
 			draw_rect(Rect2(pos, Vector2(cell_size, cell_size)), color, true)
-			# Draw border
-			draw_rect(Rect2(pos, Vector2(cell_size, cell_size)), Color.WHITE, false, 4.0)
+			# Draw outline for better visibility
+			draw_rect(Rect2(pos, Vector2(cell_size, cell_size)), Color.WHITE, false, 2.0)
 
-# --- DRAG AND DROP SYSTEM ---
-
-# 1. Can we drop here? (Runs every frame you drag over this control)
-func _can_drop_data(_at_position, data):
-	# We strictly accept data that has a "block" key (UpgradeItem)
-	if typeof(data) == TYPE_DICTIONARY and data.has("block") and data["block"] is UpgradeItem:
-		
-		# Update the ghost block for visual preview
+# --- DRAG AND DROP HANDLERS ---
+func _can_drop_data(at_position, data):
+	# Only accept the drop if it contains "block" data
+	if typeof(data) == TYPE_DICTIONARY and data.has("block"):
+		# Update the ghost block for visualization
 		ghost_block = data["block"]
-		queue_redraw() # Force redraw to show the green/red tiles
-		return true
+		ghost_grid_pos = screen_to_grid(at_position)
 		
+		# Force a redraw so the ghost follows the mouse
+		queue_redraw()
+		return true
 	return false
 
-# 2. Receive the drop
 func _drop_data(at_position, data):
 	var block = data["block"]
 	var source_slot = data["source"]
 	var grid_pos = screen_to_grid(at_position)
 	
-	# Clear the ghost
+	# Clear the ghost immediately
 	ghost_block = null
 	queue_redraw()
 	
 	if grid_pos == Vector2i(-1, -1):
-		return # Dropped outside the grid area
+		return # Dropped outside grid
 	
-	# Try to place it in the data manager
+	# Try to place the block in data
 	if GridManager.place_upgrade(block, grid_pos):
-		print("Successfully placed block at: ", grid_pos)
+		print("Placement Success at ", grid_pos)
 		
-		# Emit signal for main scene to handle effects (like spawning tilemap blocks)
+		# 1. Notify Main Scene to spawn the physical wall
 		upgrade_placed.emit(block, grid_pos)
 		
-		# Consuming the block from inventory
+		# 2. Remove the item from the inventory slot
 		if source_slot.has_method("consume_block"):
 			source_slot.consume_block()
 	else:
-		print("Invalid placement")
+		print("Placement Failed: Invalid or Blocked")
 
-# 3. Cleanup if drag is cancelled or leaves window
+# Helper to clean up when dragging leaves the window
 func _notification(what):
 	if what == NOTIFICATION_DRAG_END:
-		if ghost_block:
-			ghost_block = null
-			queue_redraw()
+		ghost_block = null
+		queue_redraw()
 
-# --- HELPER FUNCTIONS ---
+# --- UTILITIES ---
+func screen_to_grid(local_pos: Vector2) -> Vector2i:
+	# Calculate relative to the grid start
+	var rel_pos = local_pos - grid_start_pos
+	
+	var x = floor(rel_pos.x / cell_size)
+	var y = floor(rel_pos.y / cell_size)
+	
+	var pos = Vector2i(int(x), int(y))
+	
+	if is_cell_in_bounds(pos):
+		return pos
+	return Vector2i(-1, -1)
 
-func screen_to_grid(screen_pos: Vector2) -> Vector2i:
-	var local_pos = screen_pos - grid_start_pos
-	
-	# Check left/top bounds
-	if local_pos.x < 0 or local_pos.y < 0:
-		return Vector2i(-1, -1)
-	
-	var grid_x = int(floor(local_pos.x / cell_size))
-	var grid_y = int(floor(local_pos.y / cell_size))
-	
-	# Check right/bottom bounds
-	if grid_x >= GRID_SIZE.x or grid_y >= GRID_SIZE.y:
-		return Vector2i(-1, -1)
-	
-	return Vector2i(grid_x, grid_y)
+func is_cell_in_bounds(pos: Vector2i) -> bool:
+	return pos.x >= 0 and pos.x < grid_dimensions.x and pos.y >= 0 and pos.y < grid_dimensions.y
