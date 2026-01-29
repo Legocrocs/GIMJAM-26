@@ -1,9 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://8154no3rf282"]
+[gd_scene load_steps=17 format=3 uid="uid://8154no3rf282"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
 [ext_resource type="Script" uid="uid://c1a8sdxkde6in" path="res://scenes/maps.gd" id="2_mngbo"]
 [ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="3_4w45t"]
+[ext_resource type="PackedScene" uid="uid://ly0m8v7nqqjo" path="res://scenes/Map6.tscn" id="3_si52b"]
 [ext_resource type="Texture2D" uid="uid://b0cvf341m5hcq" path="res://assets/ui/overlay_temp.png" id="3_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="4_jhgck"]
 [ext_resource type="PackedScene" uid="uid://y0epvir6w06o" path="res://scenes/Map2.tscn" id="4_r6p65"]
@@ -47,6 +48,8 @@ position = Vector2(-36.444, 1.333)
 [node name="Map5" parent="Background" instance=ExtResource("7_6u1mn")]
 visible = false
 position = Vector2(-36.444, 1.333)
+
+[node name="Map6" parent="Background" instance=ExtResource("3_si52b")]
 
 [node name="Trans" parent="Background" instance=ExtResource("8_r6p65")]
 visible = false
