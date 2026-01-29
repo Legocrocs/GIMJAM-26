@@ -1,8 +1,8 @@
-[gd_scene load_steps=23 format=3 uid="uid://chd285h0grxy5"]
+[gd_scene load_steps=21 format=3 uid="uid://chd285h0grxy5"]
 
 [ext_resource type="Script" uid="uid://dihexcpc8qee4" path="res://scripts/player_projectile.gd" id="1_1nfi7"]
 [ext_resource type="Texture2D" uid="uid://dh33ocmkslgq3" path="res://assets/character/projectiles/All_Fire_Bullet_Pixel_16x16_00.png" id="2_iaq34"]
-[ext_resource type="Texture2D" uid="uid://bltg8rrtn31aq" path="res://assets/character/projectiles/All_Fire_Bullet_Pixel_16x16_02.png" id="3_iaq34"]
+[ext_resource type="Texture2D" uid="uid://dfg71fgycmyq0" path="res://assets/character/projectiles/water_projectile.png" id="3_iaq34"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_iaq34"]
 radius = 5.3333335
@@ -57,23 +57,15 @@ region = Rect2(224, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cv7vt"]
 atlas = ExtResource("3_iaq34")
-region = Rect2(0, 288, 16, 16)
+region = Rect2(0, 0, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ujk33"]
 atlas = ExtResource("3_iaq34")
-region = Rect2(16, 288, 16, 16)
+region = Rect2(8, 0, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m102s"]
 atlas = ExtResource("3_iaq34")
-region = Rect2(32, 288, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a1y8q"]
-atlas = ExtResource("3_iaq34")
-region = Rect2(48, 288, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_00uh3"]
-atlas = ExtResource("3_iaq34")
-region = Rect2(64, 288, 16, 16)
+region = Rect2(16, 0, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cv7vt"]
 animations = [{
@@ -137,12 +129,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_m102s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_a1y8q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_00uh3")
 }],
 "loop": true,
 "name": &"var_water",
@@ -163,7 +149,7 @@ debug_color = Color(2.26251, 0, 0.6634017, 0.41960785)
 z_index = -5
 sprite_frames = SubResource("SpriteFrames_cv7vt")
 animation = &"var_water"
-frame_progress = 0.7515563
+autoplay = "var_water"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
