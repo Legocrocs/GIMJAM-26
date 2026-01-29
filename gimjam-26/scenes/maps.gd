@@ -1,60 +1,37 @@
 # res://scenes/maps.gd
 # Attach to: MainScene/Background
-# Supports Map1..MapN using arrays
-# Transition behavior:
-# - On EXIT: show Trans node for 1.5s, then load next map
-# - Player hidden + input locked during transition
-# - After map loads: player still hidden + input locked until ESC (ui_cancel)
 
 extends Node2D
 
-# Drag your Map1.tscn, Map2.tscn, Map3.tscn ... here in Inspector (order matters)
 @export var map_scenes: Array[PackedScene] = []
-
-# Start index (0 = Map1, 1 = Map2, 2 = Map3, ...)
 @export var start_map_index: int = 0
-
-# Player is a sibling of Background in your main_scene.tscn
 @export var player_path: NodePath = NodePath("../Player")
-
 @export var spawn_inside_tiles: int = 1
-
-# Exit trigger tuning
 @export var exit_trigger_delay_frames: int = 3
 
-# --- NEW: Transition screen node (your Node2D named "Trans") ---
 @export var transition_node_path: NodePath = NodePath("Trans")
 @export var transition_duration: float = 1.5
-
-# Keep previous ESC transition behavior
 @export var transition_requires_esc: bool = true
-
 
 var current_map: Node2D = null
 var _current_map_index: int = 0
+var _map_xforms: Dictionary = {}
 
-# Preserve editor placement for each map name -> transform
-var _map_xforms: Dictionary = {} # key: "Map1"/"Map2"/...  value: Transform2D
-
-# Runtime exit trigger
 var _exit_trigger: Area2D = null
 var _is_switching_map := false
 
-# Transition state (ESC gate)
 var _transition_waiting_for_esc := false
-
-# Transition screen reference
 var _trans: Node2D = null
+
+# NEW: room clear / spawner management
+var _room_cleared: bool = false
+var _spawners: Array = []
 
 
 func _ready() -> void:
-	print("BG DEBUG: Background script running on node =", name, " path=", get_path())
-
-	# Grab transition screen node
 	_trans = get_node_or_null(transition_node_path) as Node2D
 	if _trans != null:
 		_trans.visible = false
-		# ensure it's above maps when shown
 		_trans.z_index = 9999
 
 	_autoload_scenes_and_xforms_from_children()
@@ -66,14 +43,10 @@ func _ready() -> void:
 	start_map_index = clamp(start_map_index, 0, map_scenes.size() - 1)
 	await load_map(start_map_index)
 
-	# Ensure we start in normal state
+	# Start state: normal gameplay (not in ESC lock)
 	_finish_transition_if_needed(true)
 
 
-# ---------------------------------------------------------
-# Auto-capture transforms from editor-placed children named Map1/Map2/Map3...
-# Then queue_free them so only runtime instance exists (avoids double physics)
-# ---------------------------------------------------------
 func _autoload_scenes_and_xforms_from_children() -> void:
 	for c in get_children():
 		if c is Node2D and (c.name.begins_with("Map")):
@@ -88,9 +61,6 @@ func _autoload_scenes_and_xforms_from_children() -> void:
 			n.queue_free()
 
 
-# ---------------------------------------------------------
-# ESC-only input gate (keeps previous behavior)
-# ---------------------------------------------------------
 func _unhandled_input(event: InputEvent) -> void:
 	if not _transition_waiting_for_esc:
 		return
@@ -107,7 +77,6 @@ func _unhandled_input(event: InputEvent) -> void:
 # Map loading / unloading
 # ---------------------------------------------------------
 func load_map(which: int) -> void:
-	print("BG DEBUG: load_map START which=", which)
 	_current_map_index = which
 
 	if which < 0 or which >= map_scenes.size():
@@ -120,16 +89,15 @@ func load_map(which: int) -> void:
 		return
 
 	_remove_exit_trigger()
+	_stop_all_spawners() # <- IMPORTANT
 
 	# Remove old map completely
 	if is_instance_valid(current_map):
-		print("BG DEBUG: freeing old map:", current_map.name)
 		current_map.queue_free()
 		current_map = null
 
 	await get_tree().process_frame
 
-	# Instance new map
 	var inst := scene.instantiate()
 	if not (inst is Node2D):
 		push_error("Background: Instanced map root must be Node2D.")
@@ -140,27 +108,40 @@ func load_map(which: int) -> void:
 	current_map.name = "Map%s" % (which + 1)
 	add_child(current_map)
 
-	# Preserve editor offset (if captured)
 	if _map_xforms.has(current_map.name):
 		current_map.transform = _map_xforms[current_map.name]
-
-	print("BG DEBUG: added map node =", current_map.name, " path=", current_map.get_path())
 
 	if not current_map.is_node_ready():
 		await current_map.ready
 	await get_tree().process_frame
 
-	# Find TileMapLayer
+	# Find TileMapLayer + wait for gates
 	var layer := _find_first_tilemaplayer(current_map)
 	if layer != null:
 		await _wait_for_layer_gates(layer)
 
-	# Spawn player at entrance (DO NOT force visible; transition controls visibility)
+	# Spawn player at entrance (don’t force visible here)
 	await _spawn_player_at_entrance(current_map)
 
-	# Create exit trigger
+	# Reset room state for this map
+	_room_cleared = false
+	_cache_spawners_for_current_map()
+	_wire_spawner_signals()
+
+	# If there are no spawners, consider room cleared immediately
+	if _spawners.is_empty():
+		_room_cleared = true
+
+	# Create exit trigger (still disabled until room cleared + transition unlocked)
 	if layer != null:
 		_create_exit_trigger(layer)
+
+	# Start spawning ONLY if we are not currently waiting for ESC
+	# (this prevents spawn-before-ESC completely)
+	if not _transition_waiting_for_esc:
+		_start_all_spawners()
+
+	_update_exit_enabled()
 
 
 func _wait_for_layer_gates(layer: TileMapLayer, max_frames: int = 240) -> void:
@@ -176,7 +157,6 @@ func _wait_for_layer_gates(layer: TileMapLayer, max_frames: int = 240) -> void:
 func _spawn_player_at_entrance(map_node: Node2D) -> void:
 	var player := get_node_or_null(player_path) as Node2D
 	if player == null:
-		push_warning("Background: Player not found at path: %s" % str(player_path))
 		return
 
 	if not player.is_node_ready():
@@ -185,13 +165,11 @@ func _spawn_player_at_entrance(map_node: Node2D) -> void:
 
 	var layer := _find_first_tilemaplayer(map_node)
 	if layer == null:
-		push_warning("Background: No TileMapLayer found in %s" % map_node.name)
 		return
 
 	var entrance: Vector2i = layer.entrance_gate_cell
 	var sentinel := Vector2i(-999999, -999999)
 	if entrance == sentinel:
-		push_warning("Background: entrance_gate_cell still sentinel on %s" % layer.name)
 		return
 
 	var rect: Rect2i = layer.get_used_rect()
@@ -214,8 +192,7 @@ func _spawn_player_at_entrance(map_node: Node2D) -> void:
 
 
 # ---------------------------------------------------------
-# EXIT trigger creation + switching maps (sequential)
-# + NEW: show Trans screen for 1.5s BEFORE showing next map
+# Exit trigger + switching maps
 # ---------------------------------------------------------
 func _remove_exit_trigger() -> void:
 	if is_instance_valid(_exit_trigger):
@@ -229,14 +206,12 @@ func _create_exit_trigger(layer: TileMapLayer) -> void:
 	var exit_cell: Vector2i = layer.exit_gate_cell
 	var sentinel := Vector2i(-999999, -999999)
 	if exit_cell == sentinel:
-		push_warning("Background: exit_gate_cell still sentinel; cannot create trigger")
 		return
 
 	_exit_trigger = Area2D.new()
 	_exit_trigger.name = "ExitTrigger"
 	_exit_trigger.monitoring = false
 	_exit_trigger.monitorable = true
-
 	layer.add_child(_exit_trigger)
 
 	var shape := RectangleShape2D.new()
@@ -252,11 +227,22 @@ func _create_exit_trigger(layer: TileMapLayer) -> void:
 
 	_exit_trigger.body_entered.connect(_on_exit_trigger_body_entered)
 
+	# wait initial delay (but still won’t enable unless room cleared + not ESC-locked)
 	await get_tree().physics_frame
 	for _i in range(exit_trigger_delay_frames):
 		await get_tree().physics_frame
-	if is_instance_valid(_exit_trigger):
-		_exit_trigger.monitoring = true
+
+	_update_exit_enabled()
+
+
+func _update_exit_enabled() -> void:
+	if not is_instance_valid(_exit_trigger):
+		return
+
+	# Exit is only enabled when:
+	# - room is cleared (all enemies dead)
+	# - not waiting for ESC
+	_exit_trigger.monitoring = (_room_cleared and not _transition_waiting_for_esc)
 
 
 func _on_exit_trigger_body_entered(body: Node) -> void:
@@ -267,39 +253,37 @@ func _on_exit_trigger_body_entered(body: Node) -> void:
 	if body != player:
 		return
 
+	# hard gate: if room not cleared, ignore
+	if not _room_cleared:
+		return
+
 	var next_index := _current_map_index + 1
 	if next_index >= map_scenes.size():
-		print("BG DEBUG: Exit reached on last map (index=", _current_map_index, "). No next map; ignoring.")
+		print("BG DEBUG: Exit reached on last map. Ignoring.")
 		return
 
 	_is_switching_map = true
-	print("BG DEBUG: Player entered EXIT. Switching to map index=", next_index)
 
-	# Keep previous behavior: hide player + lock inputs until ESC
 	if transition_requires_esc:
 		_begin_transition()
 
-	# NEW: show Trans screen for 1.5s BEFORE next map is shown
 	await _play_between_maps_transition(next_index)
 
 	_is_switching_map = false
 
 
 func _play_between_maps_transition(next_index: int) -> void:
-	# 1) Hide current map (so old map isn't visible behind Trans)
+	# stop spawners immediately
+	_stop_all_spawners()
+
 	if is_instance_valid(current_map):
 		current_map.visible = false
 
-	# 2) Show Trans on top
 	_show_trans(true)
-
-	# 3) Wait fixed time
 	await get_tree().create_timer(transition_duration).timeout
 
-	# 4) Load next map while Trans is still visible (so player never sees pop-in)
 	await load_map(next_index)
 
-	# 5) Keep Trans above the newly added map for 1 frame, then hide it
 	await get_tree().process_frame
 	_show_trans(false)
 
@@ -307,23 +291,19 @@ func _play_between_maps_transition(next_index: int) -> void:
 func _show_trans(show: bool) -> void:
 	if _trans == null:
 		return
-
 	_trans.visible = show
-
-	# Ensure it's drawn ABOVE the map that gets instanced (since load_map add_child makes map last)
 	if show:
 		move_child(_trans, get_child_count() - 1)
 		_trans.z_index = 9999
 
 
 # ---------------------------------------------------------
-# Transition lock (player hidden + no input until ESC)
-# This is the "previous transition" you said must stay.
+# ESC Transition lock (keep existing behavior)
+# + NEW: also prevents spawning until ESC
 # ---------------------------------------------------------
 func _begin_transition() -> void:
 	_transition_waiting_for_esc = true
 
-	# Mouse should appear during the transition
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	var player := get_node_or_null(player_path) as Node2D
@@ -332,11 +312,14 @@ func _begin_transition() -> void:
 
 	_set_player_controls_enabled(false)
 
+	# NEW: lock exit + stop spawning while waiting for ESC
+	_stop_all_spawners()
+	_update_exit_enabled()
+
 
 func _finish_transition() -> void:
 	_transition_waiting_for_esc = false
 
-	# Keep mouse visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	_set_player_controls_enabled(true)
@@ -346,6 +329,10 @@ func _finish_transition() -> void:
 		player.visible = true
 		if player is CharacterBody2D:
 			(player as CharacterBody2D).velocity = Vector2.ZERO
+
+	# NEW: start spawners only now (prevents spawn-before-ESC)
+	_start_all_spawners()
+	_update_exit_enabled()
 
 
 func _finish_transition_if_needed(force: bool = false) -> void:
@@ -382,6 +369,63 @@ func _set_node_processing_recursive(n: Node, enabled: bool) -> void:
 
 
 # ---------------------------------------------------------
+# Spawner + room clear handling
+# ---------------------------------------------------------
+func _cache_spawners_for_current_map() -> void:
+	_spawners.clear()
+	if not is_instance_valid(current_map):
+		return
+
+	# Find any spawner scripts (group-based)
+	for node in current_map.get_children():
+		_collect_spawners_recursive(node)
+
+
+func _collect_spawners_recursive(n: Node) -> void:
+	if n.is_in_group("enemy_spawner"):
+		_spawners.append(n)
+	for c in n.get_children():
+		_collect_spawners_recursive(c)
+
+
+func _wire_spawner_signals() -> void:
+	# mark room cleared when ANY spawner emits cleared,
+	# but only once ALL spawners are cleared
+	for sp in _spawners:
+		if sp.has_signal("room_cleared"):
+			# avoid double connections
+			if not sp.room_cleared.is_connected(_on_any_spawner_room_cleared):
+				sp.room_cleared.connect(_on_any_spawner_room_cleared)
+
+
+func _on_any_spawner_room_cleared() -> void:
+	# room cleared only when ALL spawners cleared
+	for sp in _spawners:
+		if sp.has_method("is_cleared"):
+			if not sp.is_cleared():
+				return
+	# all cleared
+	_room_cleared = true
+	_update_exit_enabled()
+
+
+func _start_all_spawners() -> void:
+	# only start if not already cleared
+	if _room_cleared:
+		return
+
+	for sp in _spawners:
+		if sp.has_method("start_spawning"):
+			sp.start_spawning()
+
+
+func _stop_all_spawners() -> void:
+	for sp in _spawners:
+		if sp.has_method("stop_spawning"):
+			sp.stop_spawning()
+
+
+# ---------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------
 func _side_for_gate_cell(rect: Rect2i, cell: Vector2i) -> String:
@@ -390,14 +434,10 @@ func _side_for_gate_cell(rect: Rect2i, cell: Vector2i) -> String:
 	var top := rect.position.y
 	var bottom := rect.position.y + rect.size.y - 1
 
-	if cell.y == top:
-		return "top"
-	if cell.y == bottom:
-		return "bottom"
-	if cell.x == left:
-		return "left"
-	if cell.x == right:
-		return "right"
+	if cell.y == top: return "top"
+	if cell.y == bottom: return "bottom"
+	if cell.x == left: return "left"
+	if cell.x == right: return "right"
 
 	var d_top = abs(cell.y - top)
 	var d_bottom = abs(cell.y - bottom)
@@ -413,7 +453,6 @@ func _side_for_gate_cell(rect: Rect2i, cell: Vector2i) -> String:
 		best = d_left
 		best_side = "left"
 	if d_right < best:
-		best = d_right
 		best_side = "right"
 	return best_side
 
