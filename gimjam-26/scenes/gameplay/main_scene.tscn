@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=12 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bf26vp7u3nqbs" path="res://scenes/Map1.tscn" id="5_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://bcsijmsk01gxr" path="res://scenes/Map3.tscn" id="7_78thy"]
 [ext_resource type="PackedScene" uid="uid://dla1yw6i7y538" path="res://scenes/Transition.tscn" id="8_86tpb"]
+[ext_resource type="PackedScene" uid="uid://df5yi11rc6gxi" path="res://scenes/Map4.tscn" id="8_p05um"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
@@ -68,6 +69,9 @@ position = Vector2(-36.444, 1.333)
 
 [node name="Map3" parent="Background" instance=ExtResource("7_78thy")]
 position = Vector2(-36.444, 1.333)
+
+[node name="Map4" parent="Background" instance=ExtResource("8_p05um")]
+scale = Vector2(0.44444445, 0.44444445)
 
 [node name="Trans" parent="Background" instance=ExtResource("8_86tpb")]
 position = Vector2(-38.222218, 1.3333321)
