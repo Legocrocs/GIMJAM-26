@@ -9,8 +9,8 @@ func _ready() -> void:
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta) -> void:
-	position += transform.x * speed * delta
+func _physics_process(delta):
+	position += direction * speed * delta # Moves toward the player
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("take_damage"):
