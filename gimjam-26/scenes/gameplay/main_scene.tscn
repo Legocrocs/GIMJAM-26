@@ -1,6 +1,5 @@
-[gd_scene load_steps=15 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=13 format=3 uid="uid://bykgabs8d7uwp"]
 
-[ext_resource type="Script" uid="uid://fauvc8ji7rpw" path="res://scenes/gameplay/main_scene.gd" id="1_24mlo"]
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
 [ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scripts/world_drop_zone.gd" id="4_p05um"]
@@ -12,12 +11,10 @@
 [ext_resource type="PackedScene" uid="uid://chiour3neyqo1" path="res://scenes/gameplay/player_area.tscn" id="9_86tpb"]
 [ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://scenes/ui/player_inventory.tscn" id="10_ng0pe"]
 [ext_resource type="PackedScene" uid="uid://dehs645ouf85t" path="res://scenes/gameplay/grid_overlay.tscn" id="11_ng0pe"]
-[ext_resource type="Script" uid="uid://dkg2natiqwx13" path="res://scenes/gameplay/grid_overlay.gd" id="13_ej44s"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ng0pe"]
 
 [node name="MainScene" type="Node2D"]
-script = ExtResource("1_24mlo")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 scale = Vector2(1e-05, 1e-05)
@@ -103,11 +100,9 @@ world_item_scene = ExtResource("6_86tpb")
 metadata/_edit_use_anchors_ = true
 
 [node name="GridOverlay" parent="." instance=ExtResource("11_ng0pe")]
-script = ExtResource("13_ej44s")
 
 [connection signal="input_event" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_input_event"]
 [connection signal="mouse_entered" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_mouse_entered"]
 
 [editable path="Player"]
 [editable path="UI/PlayerInventory"]
-[editable path="GridOverlay"]
