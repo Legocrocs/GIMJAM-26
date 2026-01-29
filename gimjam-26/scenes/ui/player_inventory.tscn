@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://c1t7knm4wtfq7"]
+
+[ext_resource type="Texture2D" path="res://assets/ui/player_inventoryt.png" id="1_qvkuw"]
+[ext_resource type="PackedScene" uid="uid://bimhke2n3s6ha" path="res://scenes/gameplay/equip_slots.tscn" id="2_cmthp"]
+[ext_resource type="Script" path="res://scripts/equip_slots.gd" id="3_pdiyb"]
+
+[node name="PlayerInventory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1065.0
+offset_bottom = -504.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_qvkuw")
+stretch_mode = 3
+
+[node name="EquipSlots" parent="TextureRect" node_paths=PackedStringArray("slot_1", "slot_2") groups=["PlayerInventory"] instance=ExtResource("2_cmthp")]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 107.75
+offset_right = -67.0
+offset_bottom = -36.25
+script = ExtResource("3_pdiyb")
+slot_1 = NodePath("GridContainer/SlotContainer/MainSlot")
+slot_2 = NodePath("GridContainer/SlotContainer2/SecSlot")
