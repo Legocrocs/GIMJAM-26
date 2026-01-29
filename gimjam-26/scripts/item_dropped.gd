@@ -1,6 +1,6 @@
 extends TextureButton
 
-var item_data: WeaponData
+var item_data: Resource
 var player_in_range: bool = false # The "Switch"
 var target_inventory = null # Store the inventory so we don't have to find it every frame
 
@@ -10,7 +10,6 @@ var target_inventory = null # Store the inventory so we don't have to find it ev
 func _ready() -> void:
 	if item_data:
 		set_item(item_data)
-	
 	# Connect signals via code to be safe
 	# We connect BOTH body_entered (for CharacterBody2D) and area_entered (for Area2D)
 	if pickup_area:
@@ -22,10 +21,19 @@ func _ready() -> void:
 	if prompt_label:
 		prompt_label.visible = false
 
-func set_item(data: WeaponData):
+func set_item(data: Resource):
 	if data != null:
 		item_data = data
+		
+	if data is WeaponData:
 		texture_normal = data.weapon_texture
+		
+	# CHECK: Is this a Block? (UpgradeItem)
+	elif data is UpgradeItem:
+		# If UpgradeItem has an icon property, use it:
+		# texture_normal = data.icon 
+		# Otherwise, use a default block texture for now:
+		texture_normal = preload("res://icon.svg") # Replace with your block sprite!
 
 # --- THE "SWITCH" LOGIC ---
 
@@ -63,19 +71,23 @@ func _unhandled_input(event):
 		attempt_pickup()
 
 func attempt_pickup():
-	print(target_inventory)
-	if target_inventory and item_data:
-		# Use the helper function we made in EquipSlots
-		if target_inventory.has_method("try_add_item"): 
-			print("yes") 
-		else: 
-			print("no")
-		var success = target_inventory.try_add_item(item_data)
-		
-		if success:
-			on_drop_accepted() # Delete item
+	if not item_data: return
+	# LOGIC A: If it is a WEAPON, find EquipSlots
+	if item_data is WeaponData:
+		var inv = get_tree().get_first_node_in_group("EquipSlots")
+		if inv and inv.has_method("try_add_item"):
+			if inv.try_add_item(item_data):
+				on_drop_accepted()
 		else:
-			print("Inventory is full!")
+			print("EquipSlots not found or full!")
+	# LOGIC B: If it is a BLOCK, find BlockInventory
+	elif item_data is UpgradeItem:
+		var inv = get_tree().get_first_node_in_group("BlockInventory")
+		if inv and inv.has_method("try_add_block"):
+			if inv.try_add_block(item_data):
+				on_drop_accepted()
+		else:
+			print("BlockInventory not found or full!")
 
 # --- DRAG AND DROP (Keep existing) ---
 func _get_drag_data(_at_position):

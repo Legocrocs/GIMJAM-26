@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://bykgabs8d7uwp"]
+[gd_scene load_steps=13 format=3 uid="uid://bykgabs8d7uwp"]
 
 [ext_resource type="PackedScene" uid="uid://dwet4kaqowj6n" path="res://scenes/gameplay/player.tscn" id="1_gh4kw"]
 [ext_resource type="Texture2D" uid="uid://dlfqhxcxn3o1f" path="res://assets/ui/bg_color.png" id="1_jhgck"]
-[ext_resource type="Texture2D" uid="uid://ch6g03v7r7akv" path="res://assets/ui/player_inventoryt_alt.png" id="4_24mlo"]
 [ext_resource type="Script" uid="uid://fjv7g56pikwj" path="res://scripts/world_drop_zone.gd" id="4_p05um"]
 [ext_resource type="Script" uid="uid://diklmvew84b6e" path="res://scripts/add_test_item.gd" id="5_ys1jj"]
 [ext_resource type="PackedScene" uid="uid://uiexcroth68s" path="res://scenes/gameplay/item.tscn" id="6_86tpb"]
@@ -11,7 +10,7 @@
 [ext_resource type="Resource" uid="uid://dx131xxrx75ha" path="res://assets/character/weapon/Watering_Can_Alt_Weapon.tres" id="9_24mlo"]
 [ext_resource type="PackedScene" uid="uid://chiour3neyqo1" path="res://scenes/gameplay/player_area.tscn" id="9_86tpb"]
 [ext_resource type="PackedScene" uid="uid://bqh12flc81xlj" path="res://scenes/ui/player_inventory.tscn" id="10_ng0pe"]
-[ext_resource type="Texture2D" uid="uid://ciqapgu0xw3y2" path="res://assets/ui/player_overlay_alt.png" id="11_ej44s"]
+[ext_resource type="PackedScene" uid="uid://dehs645ouf85t" path="res://scenes/gameplay/grid_overlay.tscn" id="11_ng0pe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ng0pe"]
 
@@ -48,8 +47,9 @@ scale = Vector2(2, 2)
 size_flags_horizontal = 1
 size_flags_vertical = 1
 
-[node name="TextureRect" parent="UI/PlayerInventory" index="0"]
-texture = ExtResource("4_24mlo")
+[node name="InventorySlots" parent="UI/PlayerInventory/TextureRect/Control" index="0" groups=["InventorySlot"]]
+
+[node name="EquipSlots" parent="UI/PlayerInventory/TextureRect/Control" index="1" groups=["EquipSlots"]]
 
 [node name="Area2D" type="Area2D" parent="UI/PlayerInventory" groups=["Player", "projectile_group"]]
 visible = false
@@ -80,9 +80,8 @@ offset_bottom = 40.0
 [node name="Foreground" parent="UI/PlayerArea" instance=ExtResource("9_86tpb")]
 z_index = 1
 position = Vector2(-338, 0)
-texture = ExtResource("11_ej44s")
 
-[node name="WorldDropZone" type="Control" parent="UI/PlayerArea" node_paths=PackedStringArray("equip_slots")]
+[node name="WorldDropZone" type="Control" parent="UI/PlayerArea"]
 layout_mode = 1
 anchor_left = 0.22761437
 anchor_top = 0.19135803
@@ -98,8 +97,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("4_p05um")
 world_item_scene = ExtResource("6_86tpb")
-equip_slots = NodePath("../../PlayerInventory/TextureRect/EquipSlots")
 metadata/_edit_use_anchors_ = true
+
+[node name="GridOverlay" parent="." instance=ExtResource("11_ng0pe")]
 
 [connection signal="input_event" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_input_event"]
 [connection signal="mouse_entered" from="UI/PlayerInventory/Area2D" to="UI/PlayerInventory/Area2D" method="_on_mouse_entered"]

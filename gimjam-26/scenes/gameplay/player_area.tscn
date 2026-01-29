@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://chiour3neyqo1"]
 
-[ext_resource type="Texture2D" uid="uid://bpvkficrnkgtn" path="res://assets/ui/player_overlay.png" id="1_h111k"]
+[ext_resource type="Texture2D" uid="uid://ciqapgu0xw3y2" path="res://assets/ui/player_overlay_alt.png" id="1_ed0h5"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rmjae"]
 
 [node name="Foreground" type="Sprite2D"]
 z_index = 3
 scale = Vector2(2, 2)
-texture = ExtResource("1_h111k")
+texture = ExtResource("1_ed0h5")
 centered = false
 
 [node name="Border" type="StaticBody2D" parent="."]

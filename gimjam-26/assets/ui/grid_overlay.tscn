@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8jpign5smwo7"]
+
+[ext_resource type="Script" uid="uid://dnr870dm4iepj" path="res://scenes/gameplay/grid_overlay.gd" id="1_gk0ld"]
+
+[node name="GridOverlay" type="CanvasLayer"]
+script = ExtResource("1_gk0ld")
+
+[node name="DrawNode" type="Node2D" parent="."]

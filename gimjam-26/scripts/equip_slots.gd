@@ -46,21 +46,21 @@ func drop_item_from_slot(slot: EquipSlot):
 	slot.set_item(null)
 	update_equipped_weapons()
 	
-func update_equipped_weapons():
-	# We send the data from the slots directly to the player
-	if player_aim:
-		player_aim.update_loadout(slot_1.weapon_data, slot_2.weapon_data)
-
-func try_add_item(new_weapon:WeaponData) -> bool:
+func try_add_item(new_weapon: WeaponData) -> bool:
+	# 1. Check if Slot 1 is empty
 	if slot_1.weapon_data == null:
 		slot_1.set_item(new_weapon)
 		update_equipped_weapons()
-		return true
+		return true # Success!
 		
-	# Check Slot 2
+	# 2. Check if Slot 2 is empty
 	if slot_2.weapon_data == null:
 		slot_2.set_item(new_weapon)
 		update_equipped_weapons()
-		return true
+		return true # Success!
 		
-	return false
+	return false # Inventory is full
+
+func update_equipped_weapons():
+	if player_aim:
+		player_aim.update_loadout(slot_1.weapon_data, slot_2.weapon_data)
